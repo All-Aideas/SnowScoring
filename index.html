@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SnowScore — Credit History API for the Invisible Generation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --avalanche-red: #E84142;
+    --ink: #0A0A0F;
+    --ink-soft: #1A1A22;
+    --snow: #FAFAF7;
+    --snow-warm: #F2F0EA;
+    --muted: #6B6B7B;
+    --accent: #00D4AA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--snow);
+    color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 1px solid rgba(10,10,15,0.08);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: 22px; letter-spacing: -0.02em; cursor: pointer;
+  }
+  .logo-mark {
+    width: 28px; height: 28px; background: var(--ink);
+    position: relative; transform: rotate(45deg);
+  }
+  .logo-mark::before, .logo-mark::after {
+    content: ''; position: absolute; background: var(--avalanche-red);
+  }
+  .logo-mark::before { inset: 4px; background: var(--snow); }
+  .logo-mark::after { inset: 9px; background: var(--avalanche-red); }
+  .nav { display: flex; gap: 32px; align-items: center; }
+  .nav a {
+    font-size: 14px; color: var(--ink-soft);
+    text-decoration: none; cursor: pointer; font-weight: 500;
+  }
+  .nav a:hover { color: var(--avalanche-red); }
+  .nav-cta {
+    background: var(--ink); color: var(--snow) !important;
+    padding: 10px 18px; font-weight: 600; transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--avalanche-red); }
+  .topbar-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.15em; color: var(--muted);
+  }
+  .pulse-dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--avalanche-red);
+    margin-right: 8px; animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .page { display: none; position: relative; z-index: 5; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { padding: 100px 48px 60px; max-width: 1400px; margin: 0 auto; }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.2em; color: var(--avalanche-red);
+    margin-bottom: 32px; display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 48px; height: 1px; background: var(--avalanche-red);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(48px, 8vw, 110px); line-height: 0.95;
+    letter-spacing: -0.04em; margin-bottom: 40px; max-width: 1100px;
+  }
+  .hero h1 em { font-style: italic; font-weight: 500; color: var(--avalanche-red); }
+  .hero-sub {
+    font-size: 19px; line-height: 1.5; max-width: 620px;
+    color: var(--ink-soft); margin-bottom: 48px;
+  }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    padding: 18px 32px; font-family: 'Inter Tight', sans-serif;
+    font-size: 15px; font-weight: 600; cursor: pointer; border: none;
+    transition: all 0.2s ease; display: inline-flex;
+    align-items: center; gap: 12px; text-decoration: none;
+  }
+  .btn-dark { background: var(--ink); color: var(--snow); }
+  .btn-dark:hover { background: var(--avalanche-red); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid rgba(10,10,15,0.2); }
+  .btn-ghost:hover { border-color: var(--avalanche-red); color: var(--avalanche-red); }
+  .btn .arrow { font-family: 'Fraunces', serif; font-size: 22px; }
+
+  /* STATS */
+  .stats-bar {
+    border-top: 1px solid rgba(10,10,15,0.1);
+    border-bottom: 1px solid rgba(10,10,15,0.1);
+    padding: 40px 48px; margin-top: 60px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    max-width: 1400px; margin-left: auto; margin-right: auto;
+  }
+  .stat .stat-num {
+    font-family: 'Fraunces', serif; font-size: 48px; font-weight: 500;
+    line-height: 1; letter-spacing: -0.02em;
+  }
+  .stat .stat-num em { color: var(--avalanche-red); font-style: italic; }
+  .stat .stat-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-top: 12px;
+  }
+
+  /* HOW */
+  .how { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.2em; color: var(--avalanche-red);
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(36px, 5vw, 64px); line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 64px; max-width: 800px;
+  }
+  .section-title em { font-style: italic; color: var(--avalanche-red); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .step-num {
+    font-family: 'Fraunces', serif; font-size: 72px; font-weight: 500;
+    color: var(--avalanche-red); line-height: 1; margin-bottom: 24px;
+    letter-spacing: -0.04em;
+  }
+  .step-title {
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500;
+    margin-bottom: 16px; letter-spacing: -0.02em;
+  }
+  .step-desc { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+
+  /* API SECTION */
+  .api-section {
+    background: var(--ink); color: var(--snow);
+    padding: 100px 48px; position: relative; overflow: hidden;
+  }
+  .api-section::before {
+    content: ''; position: absolute;
+    top: -30%; right: -10%; width: 60%; height: 160%;
+    background: radial-gradient(circle, rgba(232,65,66,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .api-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px;
+    position: relative; z-index: 2;
+  }
+  .api-left .section-eyebrow { color: var(--avalanche-red); }
+  .api-left .section-title { color: var(--snow); }
+  .api-left p {
+    font-size: 17px; line-height: 1.6;
+    color: rgba(250,250,247,0.7); margin-bottom: 32px; max-width: 480px;
+  }
+  .pricing-row {
+    display: flex; justify-content: space-between;
+    padding: 18px 0; border-bottom: 1px solid rgba(250,250,247,0.1);
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .pricing-row .key { color: rgba(250,250,247,0.6); }
+  .pricing-row .val { color: var(--snow); font-weight: 700; }
+  .pricing-row .val em { color: var(--avalanche-red); font-style: normal; }
+
+  .code-block { background: #06060A; border: 1px solid rgba(250,250,247,0.1); overflow: hidden; }
+  .code-tabs {
+    display: flex; background: rgba(250,250,247,0.03);
+    border-bottom: 1px solid rgba(250,250,247,0.08);
+  }
+  .code-tab {
+    padding: 14px 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: rgba(250,250,247,0.4); cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .code-tab.active { color: var(--snow); border-bottom-color: var(--avalanche-red); }
+  .code-body {
+    padding: 24px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.7; color: #C5C8D0;
+    overflow-x: auto; white-space: pre;
+  }
+  .code-body .c-key { color: #FF7676; }
+  .code-body .c-str { color: #A8E6CF; }
+  .code-body .c-cmt { color: #6B6B7B; }
+  .code-body .c-num { color: #FFD580; }
+
+  /* USE CASES */
+  .usecases { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
+  .uc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .uc-card {
+    background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1);
+    padding: 32px; transition: all 0.2s ease;
+  }
+  .uc-card:hover { border-color: var(--avalanche-red); transform: translateY(-4px); }
+  .uc-icon {
+    width: 48px; height: 48px; border: 1.5px solid var(--ink);
+    transform: rotate(45deg); margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px;
+  }
+  .uc-icon span { transform: rotate(-45deg); }
+  .uc-title {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500;
+    margin-bottom: 12px; letter-spacing: -0.01em;
+  }
+  .uc-desc { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+
+  /* LOGIN */
+  .login-wrap {
+    min-height: calc(100vh - 90px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px; position: relative;
+  }
+  .login-card {
+    background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1);
+    padding: 48px 48px 40px; width: 100%; max-width: 460px; position: relative;
+  }
+  .login-card::before {
+    content: 'SECURE LOGIN'; position: absolute;
+    top: -1px; left: 32px;
+    background: var(--avalanche-red); color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; padding: 4px 12px;
+  }
+  .login-card h2 {
+    font-family: 'Fraunces', serif; font-size: 36px; font-weight: 500;
+    letter-spacing: -0.02em; margin: 16px 0 8px;
+  }
+  .login-card .login-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+  .input-group { margin-bottom: 20px; }
+  .input-group label {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .input-group input {
+    width: 100%; background: var(--snow); border: 1px solid rgba(10,10,15,0.15);
+    padding: 14px 16px; font-family: 'Inter Tight', sans-serif;
+    font-size: 15px; color: var(--ink);
+  }
+  .input-group input:focus { outline: none; border-color: var(--avalanche-red); }
+  .login-divider {
+    display: flex; align-items: center; gap: 12px; margin: 24px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted);
+  }
+  .login-divider::before, .login-divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(10,10,15,0.1);
+  }
+  .social-btn {
+    width: 100%; padding: 14px;
+    background: var(--snow); border: 1px solid rgba(10,10,15,0.15);
+    font-family: 'Inter Tight', sans-serif; font-size: 14px; font-weight: 500;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin-bottom: 10px; transition: border-color 0.2s;
+  }
+  .social-btn:hover { border-color: var(--ink); }
+  .social-btn .icon { width: 18px; height: 18px; }
+  .login-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); }
+  .login-footer a { color: var(--avalanche-red); text-decoration: none; font-weight: 600; cursor: pointer; }
+
+  /* DASHBOARD */
+  .dash-shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 90px); }
+  .sidebar { background: var(--ink); color: var(--snow); padding: 32px 0; position: relative; }
+  .sidebar-user {
+    padding: 0 24px 24px;
+    border-bottom: 1px solid rgba(250,250,247,0.08); margin-bottom: 16px;
+  }
+  .avatar {
+    width: 40px; height: 40px; background: var(--avalanche-red); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px;
+    transform: rotate(45deg); margin-bottom: 12px;
+  }
+  .avatar span { transform: rotate(-45deg); }
+  .sidebar-user .name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; }
+  .sidebar-user .email {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: rgba(250,250,247,0.5); margin-top: 4px; word-break: break-all;
+  }
+  .sidebar-section {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
+    color: rgba(250,250,247,0.4); padding: 16px 24px 8px;
+  }
+  .sidebar-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 24px; font-size: 14px;
+    color: rgba(250,250,247,0.7); cursor: pointer;
+    border-left: 2px solid transparent; transition: all 0.2s;
+  }
+  .sidebar-item:hover { color: var(--snow); background: rgba(250,250,247,0.04); }
+  .sidebar-item.active {
+    color: var(--snow); border-left-color: var(--avalanche-red);
+    background: rgba(232,65,66,0.08);
+  }
+  .sidebar-item .marker {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--avalanche-red);
+  }
+  .dash-main { padding: 40px 48px; overflow-x: hidden; }
+  .dash-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 40px; flex-wrap: wrap; gap: 24px;
+  }
+  .dash-title {
+    font-family: 'Fraunces', serif; font-size: 44px; font-weight: 500;
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .dash-title em { color: var(--avalanche-red); font-style: italic; }
+  .dash-subtitle {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-top: 12px;
+  }
+
+  /* SCORE CARD */
+  .score-card {
+    background: var(--ink); color: var(--snow);
+    padding: 40px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .score-card::before {
+    content: ''; position: absolute;
+    top: -50%; right: -10%; width: 70%; height: 200%;
+    background: radial-gradient(circle, rgba(232,65,66,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .score-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+    position: relative; z-index: 2; align-items: end;
+  }
+  .score-big {
+    font-family: 'Fraunces', serif; font-size: 96px; font-weight: 500;
+    line-height: 0.9; letter-spacing: -0.04em;
+  }
+  .score-big em { color: var(--avalanche-red); font-style: italic; }
+  .score-big-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: rgba(250,250,247,0.5); margin-bottom: 12px;
+  }
+  .score-data-row {
+    display: flex; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid rgba(250,250,247,0.08);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .score-data-row .key { color: rgba(250,250,247,0.5); }
+  .score-data-row .val { color: var(--snow); font-weight: 600; }
+  .score-data-row .val em { color: var(--accent); font-style: normal; }
+
+  /* UPLOAD */
+  .upload-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .panel { background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1); padding: 32px; }
+  .panel-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-bottom: 24px;
+    display: flex; justify-content: space-between;
+  }
+  .panel-label span:last-child { color: var(--avalanche-red); }
+  .upload-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+  .upload-tab {
+    flex: 1; padding: 12px;
+    background: var(--snow); border: 1px solid rgba(10,10,15,0.1);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    cursor: pointer; text-align: center; color: var(--muted);
+  }
+  .upload-tab.active { background: var(--ink); color: var(--snow); border-color: var(--ink); }
+  .dropzone {
+    border: 2px dashed rgba(10,10,15,0.2); padding: 40px 24px;
+    text-align: center; cursor: pointer; transition: all 0.2s ease;
+    background: var(--snow);
+  }
+  .dropzone:hover, .dropzone.dragover { border-color: var(--avalanche-red); background: #FFF5F5; }
+  .dropzone-icon {
+    width: 40px; height: 40px; margin: 0 auto 12px;
+    border: 1.5px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+    transform: rotate(45deg);
+  }
+  .dropzone-icon span { transform: rotate(-45deg); }
+  .dropzone-text { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .dropzone-hint { font-size: 12px; color: var(--muted); }
+  #fileInput { display: none; }
+  .preview-img {
+    width: 100%; height: auto; max-height: 280px; object-fit: contain;
+    background: var(--ink); margin-top: 16px;
+  }
+  .api-key-row { margin-top: 20px; }
+  .api-key-row label {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-bottom: 8px;
+  }
+  .api-key-row input {
+    width: 100%; background: var(--snow); border: 1px solid rgba(10,10,15,0.15);
+    padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .api-key-row input:focus { outline: none; border-color: var(--avalanche-red); }
+  .btn-primary {
+    margin-top: 20px; width: 100%; padding: 16px 24px;
+    background: var(--ink); color: var(--snow); border: none;
+    font-family: 'Inter Tight', sans-serif; font-size: 14px;
+    font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--avalanche-red); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ANALYSIS */
+  .analysis {
+    background: var(--ink); color: var(--snow);
+    padding: 32px; position: relative; overflow: hidden; min-height: 420px;
+  }
+  .analysis::before {
+    content: ''; position: absolute;
+    top: -50%; right: -20%; width: 80%; height: 200%;
+    background: radial-gradient(circle, rgba(232,65,66,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .analysis-header {
+    display: flex; justify-content: space-between;
+    margin-bottom: 24px; position: relative; z-index: 2;
+  }
+  .analysis-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: rgba(250,250,247,0.5);
+  }
+  .analysis-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent);
+  }
+  .empty-state {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 320px; text-align: center;
+    color: rgba(250,250,247,0.4); position: relative; z-index: 2;
+  }
+  .empty-state-shape {
+    width: 64px; height: 64px;
+    border: 1px solid rgba(250,250,247,0.2);
+    transform: rotate(45deg); margin-bottom: 20px; position: relative;
+  }
+  .empty-state-shape::before {
+    content: ''; position: absolute; inset: 12px;
+    border: 1px solid rgba(250,250,247,0.15);
+  }
+  .empty-state p {
+    font-family: 'Fraunces', serif; font-size: 17px;
+    font-style: italic; max-width: 280px; line-height: 1.4;
+  }
+  .loading-state { position: relative; z-index: 2; }
+  .loading-line {
+    display: flex; gap: 12px; align-items: center;
+    padding: 12px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    opacity: 0; animation: fadeInUp 0.5s ease forwards;
+    border-bottom: 1px solid rgba(250,250,247,0.08);
+  }
+  .loading-line:nth-child(1) { animation-delay: 0.1s; }
+  .loading-line:nth-child(2) { animation-delay: 0.7s; }
+  .loading-line:nth-child(3) { animation-delay: 1.3s; }
+  .loading-line:nth-child(4) { animation-delay: 1.9s; }
+  .loading-line:nth-child(5) { animation-delay: 2.5s; }
+  .loading-line .marker { color: var(--avalanche-red); font-weight: 700; }
+  .loading-line .check { margin-left: auto; color: var(--accent); }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .results { position: relative; z-index: 2; }
+  .result-block {
+    margin-bottom: 24px;
+    opacity: 0; animation: fadeInUp 0.6s ease forwards;
+  }
+  .result-block:nth-child(1) { animation-delay: 0.1s; }
+  .result-block:nth-child(2) { animation-delay: 0.3s; }
+  .result-block:nth-child(3) { animation-delay: 0.5s; }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: rgba(250,250,247,0.4); margin-bottom: 8px;
+  }
+  .result-value {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500;
+    letter-spacing: -0.02em; line-height: 1.2;
+  }
+  .result-value em { color: var(--avalanche-red); font-style: italic; }
+  .data-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid rgba(250,250,247,0.08);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .data-row .key { color: rgba(250,250,247,0.5); }
+  .data-row .val { color: var(--snow); font-weight: 500; text-align: right; max-width: 60%; word-break: break-word; }
+
+  /* HISTORY */
+  .history-panel {
+    background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1);
+    padding: 32px; margin-bottom: 32px;
+  }
+  .history-item {
+    display: grid; grid-template-columns: 100px 1fr auto auto;
+    gap: 16px; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid rgba(10,10,15,0.08);
+  }
+  .history-item:last-child { border-bottom: none; }
+  .history-date {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);
+  }
+  .history-merchant {
+    font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
+  }
+  .history-cat {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); margin-top: 4px;
+  }
+  .history-amount {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+  }
+  .history-badge {
+    background: var(--ink); color: var(--snow);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.15em; padding: 4px 8px;
+  }
+  .history-badge.recurring { background: var(--avalanche-red); }
+  .error {
+    background: rgba(232,65,66,0.15); border-left: 3px solid var(--avalanche-red);
+    padding: 16px; margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: #FFB3B5; position: relative; z-index: 2;
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid rgba(10,10,15,0.08);
+    padding: 32px 48px;
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--muted); position: relative; z-index: 5;
+  }
+
+  /* INSIGHTS */
+  .insights-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; margin-bottom: 32px; }
+  .cat-bar-item { margin-bottom: 16px; }
+  .cat-bar-label { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .cat-bar-label .cat-val { font-weight: 600; color: var(--ink); }
+  .cat-bar-track { background: rgba(10,10,15,0.08); height: 5px; }
+  .cat-bar-fill { height: 100%; background: var(--ink); }
+  .cat-bar-fill.red { background: var(--avalanche-red); }
+  .privacy-badge { margin-top: 24px; padding: 12px 16px; background: rgba(0,212,170,0.07); border-left: 3px solid var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
+  .monthly-chart { display: flex; align-items: flex-end; gap: 8px; height: 100px; margin-top: 8px; }
+  .month-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+  .month-bar { width: 100%; background: var(--ink-soft); }
+  .month-bar.current { background: var(--avalanche-red); }
+  .month-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; }
+  .bank-connect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .bank-btn { padding: 20px 12px; background: var(--snow); border: 1px solid rgba(10,10,15,0.12); cursor: pointer; font-family: 'Inter Tight', sans-serif; font-size: 13px; font-weight: 600; color: var(--ink); transition: all 0.2s; text-align: center; }
+  .bank-btn:hover { border-color: var(--avalanche-red); background: rgba(232,65,66,0.04); }
+  .bank-btn.connected { border-color: var(--accent); background: rgba(0,212,170,0.06); color: #009970; }
+
+  /* RESPONSIVE */
+  @media (max-width: 980px) {
+    .topbar { padding: 20px 24px; flex-wrap: wrap; gap: 16px; }
+    .nav { gap: 16px; }
+    .nav a:not(.nav-cta) { display: none; }
+    .topbar-meta { display: none; }
+    .hero { padding: 48px 24px 40px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 32px 24px; }
+    .how, .api-section, .usecases { padding: 60px 24px; }
+    .api-inner { grid-template-columns: 1fr; gap: 32px; }
+    .steps { grid-template-columns: 1fr; gap: 32px; }
+    .uc-grid { grid-template-columns: 1fr; }
+    .dash-shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .dash-main { padding: 24px; }
+    .upload-grid { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr; gap: 24px; }
+    .score-big { font-size: 72px; }
+    .footer { padding: 24px; flex-direction: column; gap: 12px; }
+    .history-item { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .bank-connect-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo" onclick="goTo('landing')">
+    <div class="logo-mark"></div>
+    SnowScore
+  </div>
+  <nav class="nav" id="navPublic">
+    <a onclick="scrollTo2('how')">How it works</a>
+    <a onclick="scrollTo2('api')">For developers</a>
+    <a onclick="scrollTo2('usecases')">Use cases</a>
+    <a onclick="goTo('login')">Log in</a>
+    <a class="nav-cta" onclick="goTo('login')">Get Started →</a>
+  </nav>
+  <nav class="nav" id="navPrivate" style="display:none">
+    <span class="topbar-meta"><span class="pulse-dot"></span>FUJI · TESTNET</span>
+    <a onclick="logout()">Log out</a>
+  </nav>
+</header>
+
+<!-- ============ LANDING ============ -->
+<div class="page active" id="page-landing">
+
+  <section class="hero">
+    <div class="hero-eyebrow">The Credit History API for the Invisible Generation</div>
+    <h1>Their receipts<br>are the new <em>credit bureau.</em></h1>
+    <p class="hero-sub">
+      Millones de personas en LATAM tienen capacidad de pago, pero cero historial crediticio.
+      SnowScore convierte tickets, facturas y extractos bancarios en un score de comportamiento
+      verificable, portable y on-chain — accesible por API para bancos, fintechs y prestamistas.
+    </p>
+    <div class="hero-ctas">
+      <button class="btn btn-dark" onclick="goTo('login')">
+        <span>Start scoring</span>
+        <span class="arrow">→</span>
+      </button>
+      <button class="btn btn-ghost" onclick="scrollTo2('api')">
+        <span>API docs</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num"><em>1.4B</em></div>
+      <div class="stat-label">Unbanked adults globally</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">70<em>%</em></div>
+      <div class="stat-label">LATAM youth without credit history</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$0.12</div>
+      <div class="stat-label">Cost per API score lookup</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>&lt;2s</em></div>
+      <div class="stat-label">Avalanche finality</div>
+    </div>
+  </div>
+
+  <section class="how" id="how">
+    <div class="section-eyebrow">— How it works</div>
+    <h2 class="section-title">From a pile of <em>receipts</em><br>to a verifiable credit score.</h2>
+    <div class="steps">
+      <div>
+        <div class="step-num">01</div>
+        <div class="step-title">Capture</div>
+        <div class="step-desc">
+          El usuario sube fotos de tickets, facturas de servicios, recibos de alquiler y extractos
+          bancarios. Un año entero de actividad financiera, sin importar el formato.
+        </div>
+      </div>
+      <div>
+        <div class="step-num">02</div>
+        <div class="step-title">Reason</div>
+        <div class="step-desc">
+          Un Financial Reasoning Agent basado en Gemini Pro estandariza todo en un schema único.
+          No solo extrae datos: razona sobre patrones de recurrencia, estabilidad y consistencia.
+        </div>
+      </div>
+      <div>
+        <div class="step-num">03</div>
+        <div class="step-title">Certify</div>
+        <div class="step-desc">
+          Se emite un SnowCertificate (Soulbound Token) en Avalanche C-Chain. La reputación
+          vive en la wallet del usuario y es accesible vía API para cualquier prestamista.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="api-section" id="api">
+    <div class="api-inner">
+      <div class="api-left">
+        <div class="section-eyebrow">— For developers</div>
+        <h2 class="section-title">One API call.<br>Decades of <em>data points.</em></h2>
+        <p>
+          Bancos, fintechs y prestamistas consultan el SnowScore de un usuario con una sola
+          llamada. Sin scraping, sin formularios, sin acuerdos con burós tradicionales.
+          El usuario autoriza, vos cobrás.
+        </p>
+        <div class="pricing-row">
+          <span class="key">Score lookup</span>
+          <span class="val">$0.12 <em>/ call</em></span>
+        </div>
+        <div class="pricing-row">
+          <span class="key">Full report (12 meses)</span>
+          <span class="val">$0.85 <em>/ call</em></span>
+        </div>
+        <div class="pricing-row">
+          <span class="key">Volume tier (&gt;10k/mo)</span>
+          <span class="val">Custom <em>pricing</em></span>
+        </div>
+        <div class="pricing-row">
+          <span class="key">Sandbox / Testnet</span>
+          <span class="val"><em>Free</em></span>
+        </div>
+      </div>
+      <div class="api-right">
+        <div class="code-block">
+          <div class="code-tabs">
+            <div class="code-tab active">curl</div>
+            <div class="code-tab">Node.js</div>
+            <div class="code-tab">Python</div>
+          </div>
+          <div class="code-body"><span class="c-cmt"># Get credit score for a user wallet</span>
+curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
+  -H <span class="c-str">"Authorization: Bearer sk_live_..."</span> \
+  -d <span class="c-str">'{</span>
+<span class="c-str">    "wallet": "0xA3f...8E2",</span>
+<span class="c-str">    "depth": "12_months"</span>
+<span class="c-str">  }'</span>
+
+<span class="c-cmt"># Response</span>
+{
+  <span class="c-key">"score"</span>: <span class="c-num">87</span>,
+  <span class="c-key">"grade"</span>: <span class="c-str">"A-"</span>,
+  <span class="c-key">"confidence"</span>: <span class="c-num">0.94</span>,
+  <span class="c-key">"data_points"</span>: <span class="c-num">142</span>,
+  <span class="c-key">"recurring_payments"</span>: <span class="c-num">8</span>,
+  <span class="c-key">"avg_monthly_flow"</span>: <span class="c-num">340000</span>,
+  <span class="c-key">"on_chain_proof"</span>: <span class="c-str">"0xb47f...c91a"</span>,
+  <span class="c-key">"chain"</span>: <span class="c-str">"avalanche-c"</span>
+}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="usecases" id="usecases">
+    <div class="section-eyebrow">— Who uses SnowScore</div>
+    <h2 class="section-title">Built for <em>those who lend</em><br>and those who deserve to borrow.</h2>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-icon"><span>$</span></div>
+        <div class="uc-title">Microcredit fintechs</div>
+        <div class="uc-desc">
+          Otorgá préstamos a usuarios sin historial bancario con confianza. SnowScore reemplaza
+          al buró tradicional con datos de comportamiento reales y verificables on-chain.
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon"><span>⌂</span></div>
+        <div class="uc-title">Property rentals</div>
+        <div class="uc-desc">
+          Dueños y plataformas de alquiler verifican la solvencia de un inquilino sin pedir
+          recibos de sueldo. El SnowCertificate prueba consistencia de pago a lo largo del año.
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon"><span>◇</span></div>
+        <div class="uc-title">DeFi protocols</div>
+        <div class="uc-desc">
+          Habilitá préstamos under-collateralized en DeFi usando reputación on-chain en lugar
+          de colateral excesivo. La capa de confianza que le faltaba a Web3.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>SnowScore © 2026 — Built on Avalanche</span>
+    <span>Powered by Gemini · Anchored on C-Chain · LATAM-first</span>
+  </footer>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div class="page" id="page-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <h2>Welcome back.</h2>
+      <p class="login-sub">Ingresá a tu SnowScore para seguir construyendo tu historial.</p>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="tu@email.com" value="cesar@cesarriat.com" />
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" value="hackathon2026" />
+      </div>
+
+      <button class="btn btn-dark" style="width:100%; justify-content:center" onclick="doLogin()">
+        Continue with email →
+      </button>
+
+      <div class="login-divider"><span>or</span></div>
+
+      <button class="social-btn" onclick="doLogin()">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="social-btn" onclick="doLogin()">
+        <svg class="icon" viewBox="0 0 24 24" fill="#E84142"><path d="M12 2L2 19.5h20L12 2zm0 4.8l5.5 9.7H6.5L12 6.8z"/></svg>
+        Continue with Core Wallet
+      </button>
+
+      <div class="login-footer">
+        ¿No tenés cuenta? <a onclick="doLogin()">Sign up gratis</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-shell">
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div class="avatar"><span id="avatarLetter">C</span></div>
+        <div class="name" id="userName">Cesar Riat</div>
+        <div class="email" id="userEmail">cesar@cesarriat.com</div>
+      </div>
+      <div class="sidebar-section">Personal</div>
+      <div class="sidebar-item active"><span class="marker">01</span> Dashboard</div>
+      <div class="sidebar-item"><span class="marker">02</span> Upload history</div>
+      <div class="sidebar-item"><span class="marker">03</span> Certificate</div>
+      <div class="sidebar-section">Developer</div>
+      <div class="sidebar-item"><span class="marker">04</span> API Keys</div>
+      <div class="sidebar-item"><span class="marker">05</span> Webhooks</div>
+      <div class="sidebar-item"><span class="marker">06</span> Docs</div>
+      <div class="sidebar-section">Account</div>
+      <div class="sidebar-item"><span class="marker">07</span> Settings</div>
+      <div class="sidebar-item" onclick="logout()"><span class="marker">→</span> Log out</div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-header">
+        <div>
+          <div class="dash-title">Hola, <em><span id="greetingName">Cesar</span>.</em></div>
+          <div class="dash-subtitle">Last sync · 2 min ago · 142 datapoints analyzed</div>
+        </div>
+        <button class="btn btn-dark" onclick="document.getElementById('fileInput').click()">
+          <span>+ Add document</span>
+        </button>
+      </div>
+
+      <div class="score-card">
+        <div class="score-grid">
+          <div>
+            <div class="score-big-label">Current SnowScore</div>
+            <div class="score-big">87<em>/100</em></div>
+          </div>
+          <div>
+            <div class="score-big-label">Reputation Grade</div>
+            <div class="score-big">A<em>−</em></div>
+          </div>
+          <div>
+            <div class="score-data-row"><span class="key">Datapoints</span><span class="val">142</span></div>
+            <div class="score-data-row"><span class="key">Recurring</span><span class="val"><em>8 confirmed</em></span></div>
+            <div class="score-data-row"><span class="key">Coverage</span><span class="val">11 months</span></div>
+            <div class="score-data-row"><span class="key">On-chain</span><span class="val">Verified ✓</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANCIAL INSIGHTS -->
+      <div class="insights-grid">
+        <div class="panel">
+          <div class="panel-label">
+            <span>Spending breakdown</span>
+            <span>12 months · 142 datapoints</span>
+          </div>
+          <div class="cat-bars">
+            <div class="cat-bar-item">
+              <div class="cat-bar-label"><span>Alquiler · Rent</span><span class="cat-val">ARS 3.840.000</span></div>
+              <div class="cat-bar-track"><div class="cat-bar-fill red" style="width:42%"></div></div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label"><span>Utilities · Servicios</span><span class="cat-val">ARS 508.560</span></div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:22%"></div></div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label"><span>Groceries · Super</span><span class="cat-val">ARS 458.400</span></div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:20%"></div></div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label"><span>Telecom · Internet</span><span class="cat-val">ARS 342.000</span></div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:12%"></div></div>
+            </div>
+            <div class="cat-bar-item">
+              <div class="cat-bar-label"><span>Otros</span><span class="cat-val">ARS 228.000</span></div>
+              <div class="cat-bar-track"><div class="cat-bar-fill" style="width:8%"></div></div>
+            </div>
+          </div>
+          <div class="privacy-badge">API consumers see score only — raw documents never exposed</div>
+        </div>
+        <div class="panel">
+          <div class="panel-label"><span>Monthly income flow</span><span>ARS</span></div>
+          <div class="monthly-chart">
+            <div class="month-col"><div class="month-bar" style="height:58%"></div><div class="month-label">Oct</div></div>
+            <div class="month-col"><div class="month-bar" style="height:70%"></div><div class="month-label">Nov</div></div>
+            <div class="month-col"><div class="month-bar" style="height:65%"></div><div class="month-label">Dic</div></div>
+            <div class="month-col"><div class="month-bar" style="height:75%"></div><div class="month-label">Ene</div></div>
+            <div class="month-col"><div class="month-bar" style="height:80%"></div><div class="month-label">Mar</div></div>
+            <div class="month-col"><div class="month-bar current" style="height:100%"></div><div class="month-label">Abr</div></div>
+          </div>
+          <div style="margin-top:20px">
+            <div style="font-family:'Fraunces',serif; font-size:36px; font-weight:500; letter-spacing:-0.02em; line-height:1">ARS 480.000</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.15em; color:var(--muted); margin-top:6px">Ingreso promedio mensual · <span style="color:var(--accent)">+8% vs mes anterior</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANK CONNECT -->
+      <div class="panel" style="margin-bottom:32px">
+        <div class="panel-label">
+          <span>Importar historial bancario</span>
+          <span>Open Banking</span>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:20px; line-height:1.5">Conectá tu banco para importar tus movimientos automáticamente y fortalecer tu SnowScore.</p>
+        <div class="bank-connect-grid">
+          <button class="bank-btn" id="bankBtn0" onclick="mockBankConnect(0,'Banco Galicia')">
+            <div style="font-family:'Fraunces',serif; font-size:22px; margin-bottom:6px">▣</div>
+            Banco Galicia
+          </button>
+          <button class="bank-btn" id="bankBtn1" onclick="mockBankConnect(1,'Naranja X')">
+            <div style="font-family:'Fraunces',serif; font-size:22px; margin-bottom:6px">◈</div>
+            Naranja X
+          </button>
+          <button class="bank-btn" id="bankBtn2" onclick="mockBankConnect(2,'Mercado Pago')">
+            <div style="font-family:'Fraunces',serif; font-size:22px; margin-bottom:6px">◇</div>
+            Mercado Pago
+          </button>
+        </div>
+        <div style="margin-top:24px; padding-top:24px; border-top:1px solid rgba(10,10,15,0.08); display:flex; gap:16px; align-items:center">
+          <button class="btn-primary" style="margin-top:0; flex:1" onclick="downloadCreditReport()">
+            <span>Descargar reporte crediticio</span>
+            <span style="font-family:'Fraunces',serif; font-size:20px">↓</span>
+          </button>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-align:right; line-height:1.6">JSON / PDF<br>On-chain proof</div>
+        </div>
+      </div>
+
+      <div class="upload-grid">
+        <section class="panel">
+          <div class="panel-label">
+            <span>Add new document</span>
+            <span>● LIVE</span>
+          </div>
+          <div class="upload-tabs">
+            <div class="upload-tab active" data-type="receipt">Ticket / Factura</div>
+            <div class="upload-tab" data-type="bank">Extracto bancario</div>
+            <div class="upload-tab" data-type="other">Otro</div>
+          </div>
+          <label for="fileInput" id="dropzone" class="dropzone">
+            <div class="dropzone-icon"><span>+</span></div>
+            <div class="dropzone-text">Arrastrá tu documento</div>
+            <div class="dropzone-hint">PNG, JPG · Standardizamos cualquier formato</div>
+          </label>
+          <input type="file" id="fileInput" accept="image/*" />
+          <img id="previewImg" class="preview-img" style="display:none" />
+          <div class="api-key-row">
+            <label>Gemini API Key (demo)</label>
+            <input type="password" id="apiKey" placeholder="AIza..." />
+          </div>
+          <button id="analyzeBtn" class="btn-primary" disabled>
+            <span>Analyze & standardize</span>
+            <span style="font-family: 'Fraunces', serif; font-size: 20px">→</span>
+          </button>
+        </section>
+
+        <section class="analysis">
+          <div class="analysis-header">
+            <div class="analysis-title">Financial Reasoning Agent</div>
+            <div class="analysis-status" id="status">IDLE</div>
+          </div>
+          <div id="output">
+            <div class="empty-state">
+              <div class="empty-state-shape"></div>
+              <p>Esperando documento para razonar sobre tu patrón.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="history-panel">
+        <div class="panel-label">
+          <span>Standardized history · 12 months</span>
+          <span>API: GET /v1/history</span>
+        </div>
+        <div id="historyList">
+          <div class="history-item">
+            <div class="history-date">2026 · 04 · 10</div>
+            <div>
+              <div class="history-merchant">Edenor — Factura de luz</div>
+              <div class="history-cat">Utilities · Pago puntual</div>
+            </div>
+            <div class="history-amount">ARS 42.380</div>
+            <div class="history-badge recurring">Recurrente</div>
+          </div>
+          <div class="history-item">
+            <div class="history-date">2026 · 04 · 08</div>
+            <div>
+              <div class="history-merchant">Banco Galicia — Transferencia</div>
+              <div class="history-cat">Income · Salary inflow</div>
+            </div>
+            <div class="history-amount">ARS 480.000</div>
+            <div class="history-badge recurring">Recurrente</div>
+          </div>
+          <div class="history-item">
+            <div class="history-date">2026 · 04 · 05</div>
+            <div>
+              <div class="history-merchant">Coto Supermercado</div>
+              <div class="history-cat">Groceries · Compra semanal</div>
+            </div>
+            <div class="history-amount">ARS 38.200</div>
+            <div class="history-badge">Variable</div>
+          </div>
+          <div class="history-item">
+            <div class="history-date">2026 · 04 · 01</div>
+            <div>
+              <div class="history-merchant">Alquiler depto</div>
+              <div class="history-cat">Rent · Pago mensual</div>
+            </div>
+            <div class="history-amount">ARS 320.000</div>
+            <div class="history-badge recurring">Recurrente</div>
+          </div>
+          <div class="history-item">
+            <div class="history-date">2026 · 03 · 28</div>
+            <div>
+              <div class="history-merchant">Personal — Internet hogar</div>
+              <div class="history-cat">Telecom · Pago puntual</div>
+            </div>
+            <div class="history-amount">ARS 28.500</div>
+            <div class="history-badge recurring">Recurrente</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>SnowScore © 2026 — Built on Avalanche</span>
+    <span>Tx anchored: 0xb47f...c91a · View on Snowtrace</span>
+  </footer>
+</div>
+
+<script>
+// ROUTING
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  document.getElementById('navPublic').style.display = page === 'dashboard' ? 'none' : 'flex';
+  document.getElementById('navPrivate').style.display = page === 'dashboard' ? 'flex' : 'none';
+}
+function scrollTo2(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function doLogin() {
+  const email = document.getElementById('loginEmail').value || 'cesar@cesarriat.com';
+  document.getElementById('userEmail').textContent = email;
+  const namePart = email.split('@')[0].split('.')[0];
+  const niceName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+  document.getElementById('userName').textContent = niceName;
+  document.getElementById('greetingName').textContent = niceName;
+  document.getElementById('avatarLetter').textContent = niceName.charAt(0);
+  goTo('dashboard');
+}
+function logout() { goTo('landing'); }
+
+// UPLOAD
+const fileInput  = document.getElementById('fileInput');
+const dropzone   = document.getElementById('dropzone');
+const preview    = document.getElementById('previewImg');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const apiKeyEl   = document.getElementById('apiKey');
+const output     = document.getElementById('output');
+const statusEl   = document.getElementById('status');
+
+let currentFile = null;
+let currentBase64 = null;
+let currentDocType = 'receipt';
+
+document.querySelectorAll('.upload-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentDocType = tab.dataset.type;
+  });
+});
+
+fileInput.addEventListener('change', handleFile);
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) {
+    fileInput.files = e.dataTransfer.files;
+    handleFile();
+  }
+});
+
+function handleFile() {
+  const file = fileInput.files[0];
+  if (!file) return;
+  currentFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    currentBase64 = e.target.result.split(',')[1];
+    analyzeBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+analyzeBtn.addEventListener('click', async () => {
+  const apiKey = apiKeyEl.value.trim();
+  if (!apiKey) { alert('Pegá tu Gemini API key primero.'); return; }
+  if (!currentBase64) return;
+
+  analyzeBtn.disabled = true;
+  statusEl.textContent = 'ANALYZING';
+  statusEl.style.color = 'var(--avalanche-red)';
+  showLoadingState();
+
+  const typePrompt = {
+    receipt: 'ticket, factura o recibo de pago',
+    bank: 'extracto bancario, resumen de cuenta o movimientos bancarios',
+    other: 'documento financiero'
+  }[currentDocType];
+
+  const prompt = `Sos un Financial Reasoning Agent que ESTANDARIZA documentos financieros heterogéneos a un schema único para construir historial crediticio.
+
+Esta imagen es un ${typePrompt}. Analizala y devolvé EXCLUSIVAMENTE un JSON válido (sin markdown, sin backticks, sin texto adicional) con esta estructura:
+
+{
+  "doc_type": "${currentDocType}",
+  "merchant": "nombre del comercio, emisor o banco",
+  "category": "una de: utilities | groceries | rent | food | transport | education | health | telecom | income | transfer | other",
+  "category_label": "etiqueta en español de la categoría",
+  "amount": número en moneda local (solo el número),
+  "currency": "ARS | USD | etc",
+  "date": "YYYY-MM-DD si está disponible, sino null",
+  "is_recurring": true | false,
+  "recurrence_pattern": "monthly | weekly | one-time | unknown",
+  "payment_behavior_signal": "frase corta sobre el comportamiento financiero, max 20 palabras",
+  "reliability_score": número 0-100 representando confiabilidad como señal crediticia,
+  "items_summary": "breve descripción de lo pagado o movimientos (1 frase)",
+  "datapoints_extracted": número estimado de transacciones extraídas
+}
+
+Si no podés leer algo, devolvé null pero mantené la estructura. NUNCA devuelvas markdown ni texto fuera del JSON.`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inline_data: { mime_type: currentFile.type, data: currentBase64 } }
+            ]
+          }],
+          generationConfig: { temperature: 0.2, response_mime_type: "application/json" }
+        })
+      }
+    );
+
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Error desconocido');
+
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const cleaned = rawText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+
+    await new Promise(r => setTimeout(r, 1400));
+
+    renderResults(parsed);
+    addToHistory(parsed);
+    statusEl.textContent = 'STANDARDIZED ✓';
+    statusEl.style.color = 'var(--accent)';
+
+  } catch (err) {
+    console.error(err);
+    output.innerHTML = `<div class="error">Error: ${err.message}<br><br>API key inválida → https://aistudio.google.com/apikey</div>`;
+    statusEl.textContent = 'ERROR';
+    statusEl.style.color = 'var(--avalanche-red)';
+  } finally {
+    analyzeBtn.disabled = false;
+  }
+});
+
+function showLoadingState() {
+  output.innerHTML = `
+    <div class="loading-state">
+      <div class="loading-line"><span class="marker">01</span><span>Vision model leyendo documento…</span><span class="check">✓</span></div>
+      <div class="loading-line"><span class="marker">02</span><span>Detectando schema y normalizando campos…</span><span class="check">✓</span></div>
+      <div class="loading-line"><span class="marker">03</span><span>Razonando patrones de recurrencia…</span><span class="check">✓</span></div>
+      <div class="loading-line"><span class="marker">04</span><span>Calculando reliability score…</span><span class="check">✓</span></div>
+      <div class="loading-line"><span class="marker">05</span><span>Anclando hash en Avalanche C-Chain…</span><span class="check">✓</span></div>
+    </div>`;
+}
+
+function renderResults(d) {
+  const score = Math.round(d.reliability_score || 87);
+  const fmtAmount = d.amount ? new Intl.NumberFormat('es-AR').format(d.amount) : '—';
+  const points = d.datapoints_extracted || 1;
+
+  output.innerHTML = `
+    <div class="results">
+      <div class="result-block">
+        <div class="result-label">Behavioral signal</div>
+        <div class="result-value">${escapeHtml(d.payment_behavior_signal || 'Pago verificado y estructurado.')}</div>
+      </div>
+      <div class="result-block">
+        <div class="data-row"><span class="key">Merchant</span><span class="val">${escapeHtml(d.merchant || '—')}</span></div>
+        <div class="data-row"><span class="key">Category</span><span class="val">${escapeHtml(d.category_label || d.category || '—')}</span></div>
+        <div class="data-row"><span class="key">Amount</span><span class="val">${d.currency || 'ARS'} ${fmtAmount}</span></div>
+        <div class="data-row"><span class="key">Date</span><span class="val">${escapeHtml(d.date || 'No detectada')}</span></div>
+        <div class="data-row"><span class="key">Recurring</span><span class="val">${d.is_recurring ? 'Yes · ' + (d.recurrence_pattern || '') : 'No'}</span></div>
+        <div class="data-row"><span class="key">Datapoints added</span><span class="val">+${points}</span></div>
+        <div class="data-row"><span class="key">Reliability</span><span class="val">${score} / 100</span></div>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Schema output · POST /v1/standardize</div>
+        <pre style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(250,250,247,0.7); background: rgba(0,0,0,0.3); padding: 16px; overflow-x: auto; line-height: 1.6; white-space: pre-wrap; word-break: break-word;">${escapeHtml(JSON.stringify(d, null, 2))}</pre>
+      </div>
+    </div>`;
+}
+
+function addToHistory(d) {
+  const list = document.getElementById('historyList');
+  const date = d.date || new Date().toISOString().slice(0,10);
+  const fmtDate = date.replace(/-/g, ' · ');
+  const amount = d.amount ? new Intl.NumberFormat('es-AR').format(d.amount) : '—';
+  const item = document.createElement('div');
+  item.className = 'history-item';
+  item.style.opacity = '0';
+  item.innerHTML = `
+    <div class="history-date">${escapeHtml(fmtDate)}</div>
+    <div>
+      <div class="history-merchant">${escapeHtml(d.merchant || 'Documento sin nombre')}</div>
+      <div class="history-cat">${escapeHtml(d.category_label || d.category || 'Other')} · ${d.is_recurring ? 'Patrón estable' : 'Movimiento puntual'}</div>
+    </div>
+    <div class="history-amount">${d.currency || 'ARS'} ${amount}</div>
+    <div class="history-badge ${d.is_recurring ? 'recurring' : ''}">${d.is_recurring ? 'Recurrente' : 'Variable'}</div>
+  `;
+  list.insertBefore(item, list.firstChild);
+  setTimeout(() => {
+    item.style.transition = 'opacity 0.5s ease';
+    item.style.opacity = '1';
+  }, 50);
+}
+
+function mockBankConnect(idx, name) {
+  const btn = document.getElementById('bankBtn' + idx);
+  btn.classList.add('connected');
+  btn.innerHTML = '<div style="font-family:\'Fraunces\',serif; font-size:22px; margin-bottom:6px">✓</div>' + name + '<br><span style="font-size:11px; font-weight:400; font-family:\'JetBrains Mono\',monospace">Conectado</span>';
+}
+
+function downloadCreditReport() {
+  const report = {
+    generated: new Date().toISOString(),
+    wallet: "0xA3f...8E2",
+    snowscore: { score: 87, grade: "A-", confidence: 0.94 },
+    summary: {
+      data_points: 142,
+      recurring_payments: 8,
+      coverage_months: 11,
+      avg_monthly_income: 480000,
+      avg_monthly_expenses: 381160,
+      net_monthly_flow: 98840,
+      currency: "ARS"
+    },
+    categories: {
+      rent:      { amount: 3840000, pct: 42, recurring: true },
+      utilities: { amount: 508560,  pct: 22, recurring: true },
+      groceries: { amount: 458400,  pct: 20, recurring: false },
+      telecom:   { amount: 342000,  pct: 12, recurring: true },
+      other:     { amount: 228000,  pct:  8, recurring: false }
+    },
+    on_chain_proof: "0xb47f...c91a",
+    chain: "avalanche-c",
+    certificate: "SnowCertificate #SBT-00142",
+    privacy_note: "Raw documents are never stored or shared. Only behavioral signals and the resulting score are accessible via API."
+  };
+  const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'snowscore-credit-report-2026.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+</script>
+
+</body>
+</html>
