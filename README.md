@@ -112,6 +112,24 @@ Every document is normalized to a single JSON schema:
 
 ---
 
+## Value Flow
+
+```
+[Tickets + Historial bancario]
+        ↓
+[Financial Reasoning Agent — Gemini 2.0 Flash Multimodal]
+  01 · Extrae datos
+  02 · Normaliza schema
+  03 · Razona patrones
+        ↓
+[SnowScore 87 / A− ⟐ Avalanche C-Chain — Hash anclado on-chain]
+        ↓
+[Bancos / Fintechs / Propiedades / DeFi]
+  POST /v1/score · $0.12/call
+```
+
+---
+
 ## Running Locally
 
 No build steps. Just open the file:
