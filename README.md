@@ -93,6 +93,22 @@ Every document is normalized to a single JSON schema:
 
 ---
 
+## Brand System
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--deep-blue` | `#1E3A8A` | Logo, titles, institutional elements |
+| `--violet` | `#7C3AED` | AI, innovation, CTAs, gradient |
+| `--light-blue` | `#3B82F6` | Interfaces, icons, secondary info |
+| `--turquoise` | `#14B8A6` | Score, metrics, positive states |
+| `--lavender` | `#EDE9FE` | Cards, soft backgrounds |
+| Official gradient | `#1E3A8A → #7C3AED → #14B8A6` | Score card, CTA buttons |
+
+**Primary font:** Poppins (400/500/600/700/800) — geometric, clean, accessible
+**Technical font:** JetBrains Mono (400/500/700) — code, API, metadata
+
+---
+
 ## Tech Stack
 
 | Layer | Technology | Notes |

@@ -143,4 +143,5 @@ POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:ge
 - **2026-05-15:** Versión inicial del proyecto creada. Landing + Login + Dashboard funcionando con Gemini 2.0 Flash. Pendiente: deck, video, deploy.
 - **2026-05-15:** Agregado insights panel (spending breakdown por categoría + monthly flow chart). Agregado bank connect mock (Galicia / Naranja X / Mercado Pago) + descarga de reporte crediticio JSON. CSS/JS vanilla, sin frameworks.
 - **2026-05-15:** Git inicializado. README.md completo creado. Push a GitHub (All-Aideas/SnowScoring). API key de Gemini removida del HTML antes del commit. Notion actualizado con tareas y descripción completa del proyecto.
+- **2026-05-15:** Brand system aplicado: Poppins reemplaza Fraunces+Inter Tight. Paleta #1E3A8A→#7C3AED→#14B8A6 (gradiente oficial). Border-radius en cards/botones/panels. Score card con gradiente. STATUS.md creado. Todo pusheado.
 - **2026-05-15:** Agregado flow diagram visual en la landing (sección oscura entre stats-bar y "How it works"): Tickets + Historial → IA → Score/Avalanche → Entidades. Responsive mobile. README y CLAUDE.md actualizados. Todo pusheado.
