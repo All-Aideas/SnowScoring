@@ -579,6 +579,86 @@
     color: var(--muted); position: relative; z-index: 5;
   }
 
+  /* FLOW DIAGRAM */
+  .flow-section {
+    background: var(--ink-soft); padding: 80px 48px;
+    position: relative; overflow: hidden; z-index: 5;
+  }
+  .flow-section::before {
+    content: ''; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,65,66,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .flow-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: rgba(250,250,247,0.3); text-align: center; margin-bottom: 48px;
+  }
+  .flow-grid {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; max-width: 1100px; margin: 0 auto; position: relative; z-index: 2;
+  }
+  .flow-chevron {
+    color: var(--avalanche-red); font-size: 22px;
+    padding: 0 14px; flex-shrink: 0; opacity: 0.7;
+  }
+  .flow-inputs-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .flow-input-card {
+    background: rgba(250,250,247,0.04); border: 1px solid rgba(250,250,247,0.1);
+    padding: 14px 18px; min-width: 148px;
+  }
+  .flow-input-icon {
+    width: 26px; height: 26px; border: 1px solid rgba(250,250,247,0.2);
+    transform: rotate(45deg); margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flow-input-icon span { transform: rotate(-45deg); font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(250,250,247,0.5); }
+  .flow-input-label { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 500; color: var(--snow); margin-bottom: 4px; }
+  .flow-input-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(250,250,247,0.3); text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.6; }
+  .flow-plus { font-family: 'Fraunces', serif; font-size: 18px; color: rgba(250,250,247,0.2); text-align: center; padding: 2px 0; }
+  .flow-ai {
+    border: 1px solid rgba(232,65,66,0.4); padding: 24px 20px;
+    text-align: center; min-width: 185px;
+    background: rgba(232,65,66,0.06);
+  }
+  .flow-ai-gem {
+    width: 38px; height: 38px; background: var(--avalanche-red);
+    transform: rotate(45deg); margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flow-ai-gem span { transform: rotate(-45deg); font-family: 'Fraunces', serif; font-size: 16px; color: white; }
+  .flow-ai-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--snow); margin-bottom: 4px; }
+  .flow-ai-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(250,250,247,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .flow-ai-tags { display: flex; flex-direction: column; gap: 4px; }
+  .flow-ai-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--avalanche-red); text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 8px; border: 1px solid rgba(232,65,66,0.2); }
+  .flow-score-wrap { text-align: center; padding: 0 8px; }
+  .flow-score-num { font-family: 'Fraunces', serif; font-size: 76px; font-weight: 500; color: var(--snow); letter-spacing: -0.04em; line-height: 0.85; }
+  .flow-score-grade { font-family: 'Fraunces', serif; font-size: 30px; color: var(--avalanche-red); font-style: italic; margin-bottom: 14px; }
+  .flow-avax-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(232,65,66,0.12); border: 1px solid rgba(232,65,66,0.35);
+    padding: 7px 12px; margin-bottom: 5px;
+  }
+  .flow-avax-dot { width: 7px; height: 7px; background: var(--avalanche-red); transform: rotate(45deg); flex-shrink: 0; }
+  .flow-avax-text { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--avalanche-red); }
+  .flow-avax-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(250,250,247,0.25); text-transform: uppercase; letter-spacing: 0.1em; }
+  .flow-consumers-wrap { display: flex; flex-direction: column; gap: 6px; min-width: 148px; }
+  .flow-consumer-card {
+    background: rgba(250,250,247,0.04); border: 1px solid rgba(250,250,247,0.08);
+    padding: 10px 14px; font-family: 'Inter Tight', sans-serif;
+    font-size: 13px; font-weight: 600; color: var(--snow);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .flow-consumer-mark { font-family: 'Fraunces', serif; font-size: 12px; color: var(--avalanche-red); }
+  .flow-api-tag {
+    padding: 8px 14px; border: 1px solid rgba(0,212,170,0.25);
+    background: rgba(0,212,170,0.05); text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em;
+  }
+
   /* INSIGHTS */
   .insights-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; margin-bottom: 32px; }
   .cat-bar-item { margin-bottom: 16px; }
@@ -620,6 +700,11 @@
     .history-item { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
     .insights-grid { grid-template-columns: 1fr; }
     .bank-connect-grid { grid-template-columns: 1fr; }
+    .flow-section { padding: 48px 24px; }
+    .flow-grid { flex-direction: column; gap: 8px; }
+    .flow-chevron { transform: rotate(90deg); padding: 4px 0; }
+    .flow-inputs-wrap { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+    .flow-input-card { min-width: 120px; flex: 1; }
   }
 </style>
 </head>
@@ -683,6 +768,71 @@
       <div class="stat-label">Avalanche finality</div>
     </div>
   </div>
+
+  <!-- FLOW DIAGRAM -->
+  <section class="flow-section">
+    <div class="flow-eyebrow">— Cómo fluye el valor</div>
+    <div class="flow-grid">
+
+      <div class="flow-node">
+        <div class="flow-inputs-wrap">
+          <div class="flow-input-card">
+            <div class="flow-input-icon"><span>✦</span></div>
+            <div class="flow-input-label">Tickets</div>
+            <div class="flow-input-sub">Super · Alquiler<br>Servicios · Transporte</div>
+          </div>
+          <div class="flow-plus">+</div>
+          <div class="flow-input-card">
+            <div class="flow-input-icon"><span>◈</span></div>
+            <div class="flow-input-label">Historial bancario</div>
+            <div class="flow-input-sub">Extractos · Ingresos<br>Transferencias</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-chevron">→</div>
+
+      <div class="flow-node">
+        <div class="flow-ai">
+          <div class="flow-ai-gem"><span>✦</span></div>
+          <div class="flow-ai-title">Financial Reasoning Agent</div>
+          <div class="flow-ai-sub">Gemini 2.0 Flash · Multimodal</div>
+          <div class="flow-ai-tags">
+            <div class="flow-ai-tag">01 · Extrae datos</div>
+            <div class="flow-ai-tag">02 · Normaliza schema</div>
+            <div class="flow-ai-tag">03 · Razona patrones</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-chevron">→</div>
+
+      <div class="flow-node">
+        <div class="flow-score-wrap">
+          <div class="flow-score-num">87</div>
+          <div class="flow-score-grade">A−</div>
+          <div class="flow-avax-badge">
+            <div class="flow-avax-dot"></div>
+            <div class="flow-avax-text">Avalanche C-Chain</div>
+          </div>
+          <div class="flow-avax-sub">Hash anclado on-chain</div>
+        </div>
+      </div>
+
+      <div class="flow-chevron">→</div>
+
+      <div class="flow-node">
+        <div class="flow-consumers-wrap">
+          <div class="flow-consumer-card"><span class="flow-consumer-mark">▣</span> Bancos</div>
+          <div class="flow-consumer-card"><span class="flow-consumer-mark">◈</span> Fintechs</div>
+          <div class="flow-consumer-card"><span class="flow-consumer-mark">◇</span> Propiedades</div>
+          <div class="flow-consumer-card"><span class="flow-consumer-mark">⬡</span> DeFi</div>
+          <div class="flow-api-tag">POST /v1/score · $0.12</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <section class="how" id="how">
     <div class="section-eyebrow">— How it works</div>
