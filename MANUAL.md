@@ -63,9 +63,17 @@ El AVAX de Fuji es gratuito (no tiene valor real). Opciones:
 
 ### 4.2. Login
 
+Tenés 2 opciones:
+
+**A. Login normal (cualquier email):**
 1. Ingresá cualquier email (ej: `cesar@cesarriat.com`) y cualquier password
 2. Click **"Entrar"**
 3. *Nota: el login es mock — no hay backend real, cualquier email entra.*
+
+**B. Modo demo "María Pérez" (recomendado para jurado):**
+1. Click en la pill **"Modo demo · María Pérez"** abajo del login
+2. Entrás directo con un perfil pre-poblado: 9 documentos en historial (incluye **remesas USDT** y **cobros USDC**), tx demo persistida y badge on-chain activo desde el primer segundo
+3. Pensado para mostrar la app llena de datos sin necesidad de subir nada
 
 ### 4.3. Dashboard
 
@@ -79,7 +87,10 @@ Vas a ver:
 ### 4.4. Subir un documento
 
 1. Click en **"+ Agregar documento"** arriba a la derecha, o arrastrá una imagen al área de drop
-2. Elegí el tipo: **Ticket** / **Extracto bancario** / **Otro**
+2. Elegí el tipo:
+   - **Ticket / Factura** — recibo de servicio, factura de luz, ticket de super
+   - **Extracto bancario** — resumen de cuenta o movimientos
+   - **Cripto / Hash** — screenshot de wallet, explorador (Snowtrace, Etherscan, Tronscan) o app de exchange con un cobro/remesa en stablecoin. Sirve para acreditar **ingresos cripto** (freelance USDC, remesas familiares USDT) que el sistema bancario no ve.
 3. Click **"Analizar con Gemini"**
 4. Esperá ~10 segundos mientras corre el agente (verás 5 pasos animados)
 5. Aparecen los resultados:
@@ -126,9 +137,41 @@ Vas a ver:
 
 Cualquier banco o fintech puede recalcular `keccak256(scoreData)` y verificar que coincide con el hash anclado. Si los datos fueron modificados después, los hashes no van a coincidir.
 
+### 5.1. Verificación dentro de la app (`/#verify`)
+
+Para que un banco/fintech no tenga que salir a Snowtrace, la app trae una **página de verificación propia**:
+
+1. Andá a https://snowscore-709be.web.app/#verify o click en **"Verificar"** del menú superior
+2. Pegá un hash de transacción (`0x` + 64 chars hex)
+3. Click **"Verificar"** — la app consulta Fuji directamente via RPC (`ethers.JsonRpcProvider`) y muestra:
+   - Score recuperado del payload anclado
+   - Grade, confidence, datapoints
+   - Address del firmante, número de bloque, timestamp
+   - Link a Snowtrace para auditoría externa
+4. La tx demo del modo María Pérez funciona offline (payload hardcoded) — útil para el pitch.
+
 ---
 
-## 6. Privacidad y seguridad
+## 6. Smart contract ScoreRegistry (avanzado)
+
+Por defecto la app ancla el score como **self-transaction** (el hash va en `data`). Para una versión más institucional, el repo trae un contrato real:
+
+- `contracts/ScoreRegistry.sol` — almacena `score`, `grade`, `hash`, `confidence`, `timestamp`, `nonce` por usuario + emite evento `ScoreAnchored`
+- `deploy.html` — mini-app standalone para deployarlo con un click
+
+**Cómo deployarlo:**
+
+1. Abrí `deploy.html` (local o subido a Firebase) en el browser con Core Wallet conectada
+2. Click **"Conectar Wallet"** → la app auto-switchea a Fuji
+3. Click **"Deploy ScoreRegistry"** → Core te pide firmar la tx de deploy (~ 0.01 AVAX de gas)
+4. Cuando se mina, copiá la address que aparece
+5. Pegala en `index.html` en la constante `SCORE_REGISTRY_ADDRESS = "0x..."`
+6. Redeploy a Firebase: `firebase deploy --only hosting:snowscore-709be`
+7. Desde ahora, "Certificar on-chain" llama al contrato (con fallback a self-tx si la address está vacía)
+
+---
+
+## 7. Privacidad y seguridad
 
 - La API key de Gemini está **restringida por HTTP referrer** a `snowscore-709be.web.app`, `snowscore-709be.firebaseapp.com` y `localhost`. No se puede usar desde otros dominios.
 - En producción real, la API key debería estar detrás de un backend. Esto es una limitación conocida del MVP de demo.
@@ -136,7 +179,7 @@ Cualquier banco o fintech puede recalcular `keccak256(scoreData)` y verificar qu
 
 ---
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Problema | Solución |
 |----------|---------|
@@ -149,7 +192,7 @@ Cualquier banco o fintech puede recalcular `keccak256(scoreData)` y verificar qu
 
 ---
 
-## 8. Stack técnico (resumen)
+## 9. Stack técnico (resumen)
 
 - **Frontend:** HTML + CSS + JS vanilla, single-file (`index.html`)
 - **IA:** Gemini 2.5 Flash multimodal vía REST
@@ -159,7 +202,7 @@ Cualquier banco o fintech puede recalcular `keccak256(scoreData)` y verificar qu
 
 ---
 
-## 9. Roadmap post-hackathon
+## 10. Roadmap post-hackathon
 
 - Backend con autenticación real (Auth0 / Firebase Auth)
 - API key de Gemini detrás del backend

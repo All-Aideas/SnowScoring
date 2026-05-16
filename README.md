@@ -28,11 +28,11 @@ The traditional financial system marks them as "invisible":
 
 SnowScore is a **Financial Reasoning Agent** that transforms heterogeneous financial documents (receipts, invoices, bank statements) into a standardized credit score, certified on-chain on Avalanche C-Chain.
 
-1. **Capture** — User uploads photos of tickets, utility bills, rent receipts, and bank statements
+1. **Capture** — User uploads photos of tickets, utility bills, rent receipts, bank statements **and crypto transaction hashes** (USDC/USDT inflows, on-chain remittances)
 2. **Reason** — Gemini 2.5 Flash (multimodal) extracts structured data and reasons about behavioral patterns (recurrence, stability, consistency)
 3. **Score** — Calculates a SnowScore (0–100) and grade (A+ to D)
-4. **Certify** — Anchors a `keccak256` proof hash on Avalanche C-Chain Fuji via Core Wallet self-transaction
-5. **Share** — Third parties query the score via REST API at $0.12/call and verify integrity on Snowtrace
+4. **Certify** — Anchors a `keccak256` proof hash on Avalanche C-Chain Fuji via Core Wallet — either as self-transaction (default) or by calling the `ScoreRegistry` contract (when deployed)
+5. **Share** — Third parties query the score via REST API at $0.12/call and verify integrity on Snowtrace or via the in-app `/verify` page
 
 ---
 
@@ -78,7 +78,7 @@ Every document is normalized to a single JSON schema:
 
 ```json
 {
-  "doc_type": "receipt | bank | other",
+  "doc_type": "receipt | bank | crypto",
   "merchant": "string",
   "category": "utilities | groceries | rent | food | transport | education | health | telecom | income | transfer | other",
   "category_label": "string in Spanish",
@@ -199,6 +199,11 @@ To analyze a document, you'll need a [Gemini API key](https://aistudio.google.co
 - ✅ **Institutional landing section** for Bankaool, Arkangeles and LATAM fintechs
 - ✅ **Institutional FAQ** (privacy, KYC, regulation, integration, Avalanche rationale)
 - ✅ **Live API demo button** that simulates a real POST /v1/score response
+- ✅ **Crypto / hash document type** (USDC/USDT inflows, on-chain remittances) — first-class citizen in the upload flow
+- ✅ **ScoreRegistry smart contract** (`contracts/ScoreRegistry.sol`, Solidity 0.8.20) + one-click `deploy.html`
+- ✅ **In-app `/verify` page** — read tx/receipt/block from Fuji via `JsonRpcProvider` and show full score payload
+- ✅ **Demo mode "María Pérez"** — login pill that pre-loads 9 documents (including USDT/USDC), persisted demo tx and active on-chain badge
+- ✅ API key extracted to gitignored `config.js` (with manual fallback)
 - ✅ Live deployment on Firebase Hosting
 
 **Post-hackathon (3 months)**

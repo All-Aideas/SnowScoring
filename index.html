@@ -131,7 +131,7 @@
     border-top: 1px solid rgba(10,10,15,0.1);
     border-bottom: 1px solid rgba(10,10,15,0.1);
     padding: 40px 48px; margin-top: 60px;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px;
     max-width: 1400px; margin-left: auto; margin-right: auto;
   }
   .stat .stat-num {
@@ -967,6 +967,10 @@
       <div class="stat-num"><em>&lt;2s</em></div>
       <div class="stat-label">Finalidad en Avalanche</div>
     </div>
+    <div class="stat">
+      <div class="stat-num">$155<em>B</em></div>
+      <div class="stat-label">Remesas LATAM/año · ingresos hoy invisibles para el score</div>
+    </div>
   </div>
 
   <!-- FLOW DIAGRAM -->
@@ -1048,8 +1052,9 @@
         <div class="step-num">01</div>
         <div class="step-title">Capturar</div>
         <div class="step-desc">
-          El usuario sube fotos de tickets, facturas de servicios, recibos de alquiler y extractos
-          bancarios. Un año entero de actividad financiera, sin importar el formato.
+          El usuario sube fotos de tickets, facturas de servicios, recibos de alquiler, extractos
+          bancarios <strong>y también hashes de transacciones cripto</strong> (cobros en USDC/USDT, remesas
+          on-chain). Un año entero de actividad financiera, sin importar el formato ni la red.
         </div>
       </div>
       <div>
@@ -1543,7 +1548,7 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
           <div class="upload-tabs">
             <div class="upload-tab active" data-type="receipt">Ticket / Factura</div>
             <div class="upload-tab" data-type="bank">Extracto bancario</div>
-            <div class="upload-tab" data-type="other">Otro</div>
+            <div class="upload-tab" data-type="crypto">Cripto / Hash</div>
           </div>
           <label for="fileInput" id="dropzone" class="dropzone">
             <div class="dropzone-icon"><span>+</span></div>
@@ -1627,6 +1632,15 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
             <div class="history-amount">ARS 28.500</div>
             <div class="history-badge recurring">Recurrente</div>
           </div>
+          <div class="history-item">
+            <div class="history-date">2026 · 03 · 25</div>
+            <div>
+              <div class="history-merchant">USDC — Cobro freelance (Base)</div>
+              <div class="history-cat">Ingreso cripto · Cliente exterior</div>
+            </div>
+            <div class="history-amount">USDC 1.850</div>
+            <div class="history-badge recurring">Recurrente</div>
+          </div>
         </div>
       </div>
     </main>
@@ -1678,6 +1692,8 @@ const DEMO_PROFILE = {
     { date: '2026-04-28', merchant: 'Movistar — Plan móvil',       cat: 'Telecom · Pago puntual',           amount: 9800,  recurring: true },
     { date: '2026-04-22', merchant: 'Subte / Colectivo SUBE',      cat: 'Transporte · Recarga mensual',     amount: 12500, recurring: true },
     { date: '2026-04-18', merchant: 'Naranja X — Pago tarjeta',    cat: 'Crédito · Pago total al día',      amount: 64300, recurring: true },
+    { date: '2026-04-15', merchant: 'USDT — Remesa familiar (TRC20)', cat: 'Ingreso cripto · Remesa mensual', amount: 320,   recurring: true, currency: 'USDT' },
+    { date: '2026-04-02', merchant: 'USDC — Cobro freelance (Base)', cat: 'Ingreso cripto · Cliente exterior', amount: 850,  recurring: true, currency: 'USDC' },
   ],
   // Hash demo (formato real Snowtrace) — si Cesar ya hizo una tx real podemos reemplazarlo
   anchorTx: '0x7a3b9c5d8e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2c',
@@ -1706,7 +1722,7 @@ function loginAsDemo() {
         <div class="history-merchant">${h.merchant}</div>
         <div class="history-cat">${h.cat}</div>
       </div>
-      <div class="history-amount">ARS ${amount}</div>
+      <div class="history-amount">${h.currency || 'ARS'} ${amount}</div>
       <div class="history-badge ${h.recurring ? 'recurring' : ''}">${h.recurring ? 'Recurrente' : 'Variable'}</div>
     `;
     list.appendChild(item);
@@ -2110,7 +2126,7 @@ analyzeBtn.addEventListener('click', async () => {
   const typePrompt = {
     receipt: 'ticket, factura o recibo de pago',
     bank: 'extracto bancario, resumen de cuenta o movimientos bancarios',
-    other: 'documento financiero'
+    crypto: 'captura de transacción cripto, recibo de cobro en stablecoin o evidencia de remesa on-chain (puede ser screenshot de wallet, explorador o app de exchange)'
   }[currentDocType];
 
   const prompt = `Sos un Financial Reasoning Agent que ESTANDARIZA documentos financieros heterogéneos a un schema único para construir historial crediticio.
