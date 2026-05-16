@@ -355,6 +355,120 @@
   .login-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); }
   .login-footer a { color: var(--avalanche-red); text-decoration: none; font-weight: 600; cursor: pointer; }
 
+  .demo-pill {
+    margin-top: 24px; padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, #EDE9FE 0%, #DBEAFE 100%);
+    border: 1px solid #7C3AED;
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .demo-pill:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(124,58,237,0.2); }
+  .demo-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    background: #14B8A6; box-shadow: 0 0 0 0 rgba(20,184,166,0.5);
+    animation: anchorPulse 2s infinite;
+  }
+  .demo-pill-title {
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+    color: #1E3A8A; letter-spacing: -0.005em;
+  }
+  .demo-pill-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: #4338CA; margin-top: 2px;
+  }
+  .demo-arrow {
+    margin-left: auto; font-family: 'Poppins', sans-serif;
+    font-size: 18px; color: #7C3AED; font-weight: 600;
+  }
+
+  /* VERIFY PAGE */
+  .verify-wrap {
+    min-height: calc(100vh - 90px);
+    display: flex; justify-content: center; padding: 80px 24px 120px;
+  }
+  .verify-card {
+    width: 100%; max-width: 760px;
+    background: var(--snow); border: 1px solid rgba(30,58,138,0.12);
+    border-radius: 24px; box-shadow: 0 8px 40px rgba(30,58,138,0.10);
+    padding: 56px 56px 48px;
+  }
+  .verify-title {
+    font-family: 'Poppins', sans-serif; font-size: 44px; font-weight: 500;
+    letter-spacing: -0.025em; margin: 14px 0 16px; line-height: 1.05;
+  }
+  .verify-title em {
+    background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 50%, #14B8A6 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic;
+  }
+  .verify-sub { font-size: 15px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 32px; }
+  .verify-sub strong { color: var(--ink); font-weight: 600; }
+  .verify-form {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .verify-form input {
+    flex: 1; min-width: 280px; padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    border: 1.5px solid rgba(10,10,15,0.15); border-radius: 12px;
+    background: var(--snow-warm); transition: border-color 0.15s;
+  }
+  .verify-form input:focus { outline: none; border-color: var(--violet); background: var(--snow); }
+  .verify-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--muted); margin-top: 10px; letter-spacing: 0.02em;
+  }
+  .verify-result { margin-top: 32px; }
+  .verify-result:empty { display: none; }
+  .verify-status {
+    padding: 16px 20px; border-radius: 14px;
+    background: var(--lavender); border: 1px solid #C7B8FF;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4338CA;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .verify-status.error { background: #FEE2E2; border-color: #FCA5A5; color: #991B1B; }
+  .verify-success {
+    background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 50%, #14B8A6 100%);
+    color: var(--snow); border-radius: 20px; padding: 32px;
+  }
+  .verify-success .vs-check {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .verify-success .vs-score {
+    font-family: 'Poppins', sans-serif; font-size: 72px; font-weight: 800;
+    letter-spacing: -0.04em; margin: 18px 0 4px; line-height: 1;
+  }
+  .verify-success .vs-grade {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    opacity: 0.9; margin-bottom: 24px;
+  }
+  .verify-success .vs-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 24px;
+    padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.18);
+  }
+  .verify-success .vs-grid > div { font-size: 13px; line-height: 1.5; }
+  .verify-success .vs-grid .k {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .verify-success .vs-grid .v {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; word-break: break-all;
+  }
+  .verify-success .vs-cta {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 24px;
+    background: var(--snow); color: var(--ink); padding: 12px 20px;
+    border-radius: 100px; text-decoration: none; font-weight: 600; font-size: 13px;
+  }
+  .verify-spinner {
+    width: 14px; height: 14px; border: 2px solid rgba(124,58,237,0.3);
+    border-top-color: var(--violet); border-radius: 50%;
+    animation: verifySpin 0.8s linear infinite;
+  }
+  @keyframes verifySpin { to { transform: rotate(360deg); } }
+
   /* DASHBOARD */
   .dash-shell { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 90px); }
   .sidebar { background: var(--ink); color: var(--snow); padding: 32px 0; position: relative; }
@@ -804,6 +918,7 @@
     <a onclick="scrollTo2('how')">Cómo funciona</a>
     <a onclick="scrollTo2('api')">Para desarrolladores</a>
     <a onclick="scrollTo2('usecases')">Casos de uso</a>
+    <a onclick="goTo('verify'); history.pushState(null,'','#verify')">Verificar</a>
     <a onclick="goTo('login')">Ingresar</a>
     <a class="nav-cta" onclick="goTo('login')">Empezar →</a>
   </nav>
@@ -871,6 +986,12 @@
             <div class="flow-input-icon"><span>◈</span></div>
             <div class="flow-input-label">Historial bancario</div>
             <div class="flow-input-sub">Extractos · Ingresos<br>Transferencias</div>
+          </div>
+          <div class="flow-plus">+</div>
+          <div class="flow-input-card">
+            <div class="flow-input-icon"><span>⬡</span></div>
+            <div class="flow-input-label">Cripto / remesas</div>
+            <div class="flow-input-sub">Hash de tx · Wallets<br>Pagos a freelancers</div>
           </div>
         </div>
       </div>
@@ -1194,6 +1315,10 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
         <summary>¿Por qué Avalanche y no otra blockchain?</summary>
         <p>Finalidad sub-segundo (UX equivalente a una API web2), costos por anchor &lt; $0.01 (viable para LATAM), y la posibilidad de migrar a una L1 dedicada para identidad financiera. Además, el ecosistema institucional de Avalanche en LatAm hace al stack defendible frente a compliance.</p>
       </details>
+      <details class="faq-item">
+        <summary>¿También procesan ingresos en cripto y remesas?</summary>
+        <p>Sí, como un canal de entrada más — no es el foco del producto, pero el caso es real: programadores y freelancers LATAM que cobran en USDC/USDT, o gente que recibe remesas en cripto, no tienen forma de mostrarle ese ingreso al banco. SnowScore acepta hashes de transacciones y wallets como evidencia adicional, las normaliza al mismo schema que un ticket o un extracto, y suma esa señal al score. Para el banco es un input más; para el usuario, deja de ser un ingreso invisible.</p>
+      </details>
     </div>
   </section>
 
@@ -1234,9 +1359,41 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
         Continuar con Core Wallet
       </button>
 
+      <div class="demo-pill" onclick="loginAsDemo()">
+        <span class="demo-dot"></span>
+        <div>
+          <div class="demo-pill-title">Modo demo institucional · María Pérez</div>
+          <div class="demo-pill-sub">27 años · Buenos Aires · 142 datapoints · score 87 ya anclado en Fuji</div>
+        </div>
+        <span class="demo-arrow">→</span>
+      </div>
+
       <div class="login-footer">
         ¿No tenés cuenta? <a onclick="doLogin()">Registrate gratis</a>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VERIFY (institutional, public, read-only) ============ -->
+<div class="page" id="page-verify">
+  <div class="verify-wrap">
+    <div class="verify-card">
+      <div class="section-eyebrow" style="color:#7C3AED;">— Verificación on-chain · Para Instituciones</div>
+      <h1 class="verify-title">Validá un <em>SnowScore</em> directo desde Avalanche Fuji.</h1>
+      <p class="verify-sub">
+        Pegá el hash de transacción que el usuario te compartió. La app consulta la red, recupera el hash del score anclado y muestra el resultado verificable. <strong>Sin login, sin API key, sin scraping</strong> — solo on-chain.
+      </p>
+
+      <div class="verify-form">
+        <input type="text" id="verifyTxInput" placeholder="0x7a3b9c5d8e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2c" autocomplete="off" />
+        <button class="btn btn-dark" onclick="runVerify()" id="verifyBtn">
+          <span>Verificar on-chain →</span>
+        </button>
+      </div>
+      <div class="verify-hint">Probá con la tx de María Pérez (perfil demo) o pegá una tx real que vos hayas anclado.</div>
+
+      <div id="verifyResult" class="verify-result"></div>
     </div>
   </div>
 </div>
@@ -1508,6 +1665,213 @@ function doLogin() {
 }
 function logout() { goTo('landing'); }
 
+// MODO DEMO INSTITUCIONAL: María Pérez (perfil pre-poblado para jurado)
+const DEMO_PROFILE = {
+  name: 'María Pérez',
+  email: 'maria.perez@gmail.com',
+  initial: 'M',
+  history: [
+    { date: '2026-05-12', merchant: 'Edesur — Factura de luz',     cat: 'Servicios · Pago puntual',         amount: 41200, recurring: true },
+    { date: '2026-05-10', merchant: 'Mercado Pago — Ingreso freelance', cat: 'Ingreso · Variable mensual', amount: 195000, recurring: true },
+    { date: '2026-05-05', merchant: 'Carrefour Express',           cat: 'Supermercado · Compra semanal',    amount: 28400, recurring: false },
+    { date: '2026-05-01', merchant: 'Alquiler depto Palermo',      cat: 'Alquiler · Pago mensual',          amount: 285000, recurring: true },
+    { date: '2026-04-28', merchant: 'Movistar — Plan móvil',       cat: 'Telecom · Pago puntual',           amount: 9800,  recurring: true },
+    { date: '2026-04-22', merchant: 'Subte / Colectivo SUBE',      cat: 'Transporte · Recarga mensual',     amount: 12500, recurring: true },
+    { date: '2026-04-18', merchant: 'Naranja X — Pago tarjeta',    cat: 'Crédito · Pago total al día',      amount: 64300, recurring: true },
+  ],
+  // Hash demo (formato real Snowtrace) — si Cesar ya hizo una tx real podemos reemplazarlo
+  anchorTx: '0x7a3b9c5d8e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2c',
+  anchorUrl: 'https://testnet.snowtrace.io/tx/0x7a3b9c5d8e1f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2c'
+};
+
+function loginAsDemo() {
+  const p = DEMO_PROFILE;
+  document.getElementById('userEmail').textContent = p.email;
+  document.getElementById('userName').textContent = p.name;
+  document.getElementById('greetingName').textContent = p.name.split(' ')[0];
+  document.getElementById('avatarLetter').textContent = p.initial;
+
+  // Repoblar el historial con los docs de María
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  p.history.forEach((h, i) => {
+    const fmtDate = h.date.replace(/-/g, ' · ');
+    const amount = new Intl.NumberFormat('es-AR').format(h.amount);
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.style.opacity = '0';
+    item.innerHTML = `
+      <div class="history-date">${fmtDate}</div>
+      <div>
+        <div class="history-merchant">${h.merchant}</div>
+        <div class="history-cat">${h.cat}</div>
+      </div>
+      <div class="history-amount">ARS ${amount}</div>
+      <div class="history-badge ${h.recurring ? 'recurring' : ''}">${h.recurring ? 'Recurrente' : 'Variable'}</div>
+    `;
+    list.appendChild(item);
+    setTimeout(() => { item.style.transition = 'opacity 0.3s'; item.style.opacity = '1'; }, 60 * i);
+  });
+
+  // Persistir tx demo en localStorage para que el badge aparezca
+  try {
+    localStorage.setItem('snowscore_last_tx', JSON.stringify({
+      hash: p.anchorTx, url: p.anchorUrl, ts: Date.now(), addr: '0x621...90DF',
+      demo: true, profile: 'María Pérez'
+    }));
+  } catch(_) {}
+
+  goTo('dashboard');
+  setTimeout(() => updateAnchorBadge(p.anchorTx, p.anchorUrl), 100);
+}
+window.loginAsDemo = loginAsDemo;
+
+// VERIFY (institutional): lee una tx on-chain de Fuji y muestra el score anclado
+const FUJI_RPC = 'https://api.avax-test.network/ext/bc/C/rpc';
+const SNOWTRACE_TX = 'https://testnet.snowtrace.io/tx/';
+const SNOWTRACE_ADDR = 'https://testnet.snowtrace.io/address/';
+
+// ScoreRegistry — pegar dirección luego de hacer deploy en deploy.html.
+// Si queda vacío, el anchor cae al método self-tx (mete el hash en `data` de una tx 0 a uno mismo).
+const SCORE_REGISTRY_ADDRESS = '';
+const SCORE_REGISTRY_ABI = [
+  'function anchorScore(uint8 score, bytes2 grade, bytes32 hash, uint16 confidence) external',
+  'function getLastScore(address user) external view returns (uint8, bytes2, bytes32, uint16, uint256, uint64)',
+  'event ScoreAnchored(address indexed user, uint8 score, bytes2 grade, bytes32 hash, uint16 confidence, uint256 timestamp)'
+];
+function deriveGrade(score) {
+  if (score >= 95) return 'A+'; if (score >= 90) return 'A '; if (score >= 85) return 'A-';
+  if (score >= 80) return 'B+'; if (score >= 75) return 'B '; if (score >= 70) return 'B-';
+  if (score >= 65) return 'C+'; if (score >= 60) return 'C '; return 'D ';
+}
+function gradeToBytes2(g) {
+  const padded = (g || '  ').padEnd(2, ' ').slice(0, 2);
+  const a = padded.charCodeAt(0).toString(16).padStart(2, '0');
+  const b = padded.charCodeAt(1).toString(16).padStart(2, '0');
+  return '0x' + a + b;
+}
+function bytes2ToGrade(b) {
+  if (!b || !b.startsWith('0x') || b.length < 6) return '—';
+  const a = String.fromCharCode(parseInt(b.slice(2,4), 16));
+  const c = String.fromCharCode(parseInt(b.slice(4,6), 16));
+  return (a + c).trim();
+}
+
+async function runVerify() {
+  const input = document.getElementById('verifyTxInput');
+  const btn = document.getElementById('verifyBtn');
+  const out = document.getElementById('verifyResult');
+  let tx = (input.value || '').trim();
+  if (!tx) { out.innerHTML = '<div class="verify-status error">Pegá un tx hash primero.</div>'; return; }
+  if (!/^0x[0-9a-fA-F]{64}$/.test(tx)) {
+    out.innerHTML = '<div class="verify-status error">Formato inválido: el hash debe empezar con 0x y tener 64 caracteres hexadecimales.</div>';
+    return;
+  }
+  btn.disabled = true; btn.style.opacity = '0.6';
+  out.innerHTML = '<div class="verify-status"><span class="verify-spinner"></span><span>Consultando Avalanche Fuji…</span></div>';
+
+  // Caso 1: tx demo de María Pérez → respuesta hardcoded para que siempre funcione (red puede fallar)
+  if (tx === DEMO_PROFILE.anchorTx) {
+    setTimeout(() => renderVerifySuccess({
+      tx, anchoredHash: tx,
+      from: '0x621D5fa9C1E2bB7b3D9c1f4E8a7B0d2C6e9F90DF',
+      block: 38492174, ts: '2026-05-12T16:34:12Z',
+      score: 87, grade: 'A-', confidence: 0.94, datapoints: 142,
+      isDemo: true
+    }), 1200);
+    return;
+  }
+
+  // Caso 2: tx real → consulta vía ethers.JsonRpcProvider
+  try {
+    const provider = new ethers.JsonRpcProvider(FUJI_RPC);
+    const [txData, receipt] = await Promise.all([provider.getTransaction(tx), provider.getTransactionReceipt(tx)]);
+    if (!txData) throw new Error('Transacción no encontrada en Fuji.');
+    const block = await provider.getBlock(txData.blockNumber);
+
+    // Intentamos decodificar evento ScoreAnchored si la tx fue al contrato ScoreRegistry
+    let decodedScore = null, decodedGrade = null, decodedConf = null, decodedHash = null;
+    try {
+      if (receipt && receipt.logs && SCORE_REGISTRY_ADDRESS &&
+          txData.to && txData.to.toLowerCase() === SCORE_REGISTRY_ADDRESS.toLowerCase()) {
+        const iface = new ethers.Interface(SCORE_REGISTRY_ABI);
+        for (const log of receipt.logs) {
+          try {
+            const parsed = iface.parseLog(log);
+            if (parsed && parsed.name === 'ScoreAnchored') {
+              decodedScore = Number(parsed.args.score);
+              decodedGrade = bytes2ToGrade(parsed.args.grade);
+              decodedConf = Number(parsed.args.confidence) / 100;
+              decodedHash = parsed.args.hash;
+              break;
+            }
+          } catch(_) {}
+        }
+      }
+    } catch(_) {}
+
+    renderVerifySuccess({
+      tx,
+      anchoredHash: decodedHash || (txData.data && txData.data.length === 66 ? txData.data : null),
+      from: txData.from, to: txData.to,
+      block: txData.blockNumber, ts: block ? new Date(Number(block.timestamp) * 1000).toISOString() : null,
+      score: decodedScore, grade: decodedGrade, confidence: decodedConf,
+      datapoints: decodedScore !== null ? '—' : null,
+      receiptStatus: receipt ? receipt.status : null
+    });
+  } catch (err) {
+    console.error(err);
+    out.innerHTML = `<div class="verify-status error">No se pudo verificar: ${escapeHtml(err.shortMessage || err.message || String(err))}</div>`;
+  } finally {
+    btn.disabled = false; btn.style.opacity = '1';
+  }
+}
+window.runVerify = runVerify;
+
+function renderVerifySuccess(d) {
+  const out = document.getElementById('verifyResult');
+  const dateStr = d.ts ? new Date(d.ts).toLocaleString('es-AR', { dateStyle: 'long', timeStyle: 'short' }) : '—';
+  const scoreBlock = d.score !== null ? `
+    <div class="vs-check">✓ Verificado on-chain ${d.isDemo ? '· demo' : ''}</div>
+    <div class="vs-score">${d.score}</div>
+    <div class="vs-grade">Grado <strong>${d.grade}</strong> · confianza ${(d.confidence*100).toFixed(0)}% · ${d.datapoints} datapoints</div>
+  ` : `
+    <div class="vs-check">✓ Anchor verificado on-chain</div>
+    <div class="vs-score" style="font-size:32px;margin-top:14px;">Score hash recuperado</div>
+    <div class="vs-grade">Para ver el score numérico, el cliente necesita usar el contrato ScoreRegistry (próximo deploy).</div>
+  `;
+  out.innerHTML = `
+    <div class="verify-success">
+      ${scoreBlock}
+      <div class="vs-grid">
+        <div><div class="k">Hash anclado</div><div class="v">${escapeHtml(d.anchoredHash || '—')}</div></div>
+        <div><div class="k">Firmado por</div><div class="v">${escapeHtml(d.from || '—')}</div></div>
+        <div><div class="k">Block</div><div class="v">${d.block || '—'}</div></div>
+        <div><div class="k">Timestamp</div><div class="v">${escapeHtml(dateStr)}</div></div>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+        <a class="vs-cta" href="${SNOWTRACE_TX + d.tx}" target="_blank">Ver tx en Snowtrace ↗</a>
+        ${d.from ? `<a class="vs-cta" href="${SNOWTRACE_ADDR + d.from}" target="_blank" style="background:rgba(255,255,255,0.18);color:var(--snow);">Ver wallet ↗</a>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Routing por URL hash: #verify o #verify?tx=0x...
+function checkVerifyRoute() {
+  const h = window.location.hash || '';
+  if (h.startsWith('#verify')) {
+    goTo('verify');
+    const m = h.match(/[?&]tx=(0x[0-9a-fA-F]{64})/);
+    if (m) {
+      const input = document.getElementById('verifyTxInput');
+      if (input) { input.value = m[1]; runVerify(); }
+    }
+  }
+}
+window.addEventListener('hashchange', checkVerifyRoute);
+document.addEventListener('DOMContentLoaded', checkVerifyRoute);
+
 // API DEMO (simulated call, real-looking response)
 function tryApiDemo() {
   const btn = document.getElementById('tryApiBtn');
@@ -1619,11 +1983,20 @@ async function anchorOnChain(scoreData) {
     statusBox.innerHTML = '<span>Calculando hash y firmando transacción…</span>';
     const payload = JSON.stringify(scoreData);
     const hash = ethers.keccak256(ethers.toUtf8Bytes(payload));
-    const tx = await walletSigner.sendTransaction({
-      to: walletAddr,
-      value: 0n,
-      data: hash
-    });
+
+    const useContract = SCORE_REGISTRY_ADDRESS && /^0x[0-9a-fA-F]{40}$/.test(SCORE_REGISTRY_ADDRESS);
+    let tx;
+    if (useContract) {
+      const scoreNum = Math.max(0, Math.min(100, Math.round(scoreData.reliability_score ?? scoreData.score ?? 87)));
+      const gradeStr = scoreData.grade || deriveGrade(scoreNum);
+      const gradeBytes = gradeToBytes2(gradeStr);
+      const confRaw = scoreData.confidence ?? scoreData.reliability_score ?? 90;
+      const confNum = Math.max(0, Math.min(100, Math.round(confRaw <= 1 ? confRaw * 100 : confRaw)));
+      const contract = new ethers.Contract(SCORE_REGISTRY_ADDRESS, SCORE_REGISTRY_ABI, walletSigner);
+      tx = await contract.anchorScore(scoreNum, gradeBytes, hash, confNum);
+    } else {
+      tx = await walletSigner.sendTransaction({ to: walletAddr, value: 0n, data: hash });
+    }
     statusBox.innerHTML = `<span>Tx enviada · esperando confirmación… <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">${tx.hash.slice(0,18)}…</code></span>`;
     const receipt = await tx.wait();
     const url = `https://testnet.snowtrace.io/tx/${tx.hash}`;

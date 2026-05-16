@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>SnowScore · Deploy ScoreRegistry</title>
+<link rel="icon" type="image/svg+xml" href="brand/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<style>
+  :root {
+    --snow:#FAFAF7; --snow-warm:#F4F4EE; --ink:#0A0A0F; --ink-soft:#2A2A33;
+    --muted:#6B6B7C; --deep-blue:#1E3A8A; --violet:#7C3AED; --turquoise:#14B8A6;
+    --lavender:#EDE9FE;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--snow); color: var(--ink); font-family: 'Poppins', sans-serif; min-height:100vh; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 32px 80px; }
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--violet); margin-bottom: 12px; }
+  h1 { font-size: 44px; font-weight: 500; letter-spacing: -0.025em; margin: 0 0 14px; line-height: 1.05; }
+  h1 em {
+    background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 50%, #14B8A6 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-style: italic;
+  }
+  p { color: var(--ink-soft); line-height: 1.65; font-size: 15px; }
+  .card { background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1); border-radius: 20px; padding: 32px; margin-top: 32px; }
+  .row { display:flex; gap:12px; align-items:center; flex-wrap: wrap; margin-top: 16px; }
+  button {
+    padding: 14px 24px; border: none; border-radius: 100px;
+    background: linear-gradient(135deg, #1E3A8A 0%, #7C3AED 50%, #14B8A6 100%);
+    color: var(--snow); font-family: 'Poppins', sans-serif; font-weight: 600;
+    font-size: 14px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,58,237,0.25); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.secondary {
+    background: transparent; color: var(--violet); border: 1.5px solid var(--violet);
+  }
+  .status { padding: 16px; border-radius: 12px; background: var(--lavender); font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-top: 16px; color: #4338CA; word-break: break-all; }
+  .status.success { background: linear-gradient(135deg, #DCFCE7, #ECFDF5); color: #065F46; }
+  .status.error { background: #FEE2E2; color: #991B1B; }
+  code { font-family: 'JetBrains Mono', monospace; background: rgba(124,58,237,0.1); padding: 2px 6px; border-radius: 4px; color: var(--violet); font-size: 12px; }
+  pre { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--ink); color: #C4F0E8; padding: 16px; border-radius: 12px; overflow-x: auto; line-height: 1.6; }
+  .step { display:flex; gap:14px; padding: 14px 0; border-top: 1px solid rgba(10,10,15,0.08); }
+  .step:first-of-type { border-top: 0; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--violet); color: var(--snow); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+  .step-body { flex: 1; }
+  .step-title { font-weight: 600; margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  a { color: var(--violet); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">— SnowScore · Deploy</div>
+  <h1>Deployá el <em>ScoreRegistry</em> en Avalanche Fuji.</h1>
+  <p>Esta mini-app pone el contrato <code>ScoreRegistry</code> on-chain en menos de 30 segundos. Necesitás Core Wallet con AVAX en Fuji testnet.</p>
+
+  <div class="card">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Conectá tu wallet</div>
+        <div class="step-desc">Te switcheamos automáticamente a Fuji.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Firmá el deploy</div>
+        <div class="step-desc">Core te pide confirmar la transacción (≈ 0.005 AVAX de gas).</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Copiá la address</div>
+        <div class="step-desc">Pegala en <code>SCORE_REGISTRY_ADDRESS</code> en <code>index.html</code> + redeploy.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="connectBtn" onclick="connectWallet()">Conectar Core Wallet</button>
+      <button id="deployBtn" onclick="doDeploy()" disabled>Deploy ScoreRegistry →</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <p style="margin-top:32px;font-size:13px;color:var(--muted);">
+    Volver a la <a href="./index.html">app principal</a> · Ver <a href="./contracts/ScoreRegistry.sol">source</a>
+  </p>
+</div>
+
+<script>
+const FUJI = {
+  chainId: '0xa869',
+  chainName: 'Avalanche Fuji C-Chain',
+  nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+  rpcUrls: ['https://api.avax-test.network/ext/bc/C/rpc'],
+  blockExplorerUrls: ['https://testnet.snowtrace.io/']
+};
+
+// ABI compilada localmente con solc 0.8.24
+const ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint8","name":"score","type":"uint8"},{"indexed":false,"internalType":"bytes2","name":"grade","type":"bytes2"},{"indexed":false,"internalType":"bytes32","name":"hash","type":"bytes32"},{"indexed":false,"internalType":"uint16","name":"confidence","type":"uint16"},{"indexed":false,"internalType":"uint256","name":"timestamp","type":"uint256"}],"name":"ScoreAnchored","type":"event"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"anchorCount","outputs":[{"internalType":"uint64","name":"","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"score","type":"uint8"},{"internalType":"bytes2","name":"grade","type":"bytes2"},{"internalType":"bytes32","name":"hash","type":"bytes32"},{"internalType":"uint16","name":"confidence","type":"uint16"}],"name":"anchorScore","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getLastScore","outputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"bytes2","name":"","type":"bytes2"},{"internalType":"bytes32","name":"","type":"bytes32"},{"internalType":"uint16","name":"","type":"uint16"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint64","name":"","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastScore","outputs":[{"internalType":"uint8","name":"score","type":"uint8"},{"internalType":"bytes2","name":"grade","type":"bytes2"},{"internalType":"bytes32","name":"hash","type":"bytes32"},{"internalType":"uint16","name":"confidence","type":"uint16"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"uint64","name":"nonce","type":"uint64"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalAnchors","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+
+const BYTECODE = "0x608060405234801561000f575f80fd5b5061054a8061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610055575f3560e01c80631fcbef9714610059578063208161571461006e578063368392d5146101555780639ffb463514610197578063eb60db67146101ae575b5f80fd5b61006c61006736600461042c565b610204565b005b61010861007c366004610493565b6001600160a01b03165f9081526020818152604091829020825160c081018452815460ff811680835261010090910460f01b6001600160f01b0319169382018490526001830154948201859052600283015461ffff166060830181905260038401546080840181905260049094015467ffffffffffffffff1660a0909301839052909593949390929190565b6040805160ff90971687526001600160f01b031990951660208701529385019290925261ffff166060840152608083015267ffffffffffffffff1660a082015260c0015b60405180910390f35b61017e610163366004610493565b60016020525f908152604090205467ffffffffffffffff1681565b60405167ffffffffffffffff909116815260200161014c565b6101a060025481565b60405190815260200161014c565b6101086101bc366004610493565b5f602081905290815260409020805460018201546002830154600384015460049094015460ff84169461010090940460f01b9361ffff909216919067ffffffffffffffff1686565b60648460ff1611156102495760405162461bcd60e51b8152602060048201526009602482015268073636f72653e3130360bc1b60448201526064015b60405180910390fd5b60648161ffff1611156102895760405162461bcd60e51b81526020600482015260086024820152670636f6e663e3130360c41b6044820152606401610240565b335f9081526001602081905260408220546102b09167ffffffffffffffff909116906104d4565b335f908152600160205260408120805467ffffffffffffffff191667ffffffffffffffff841617905560028054929350906102ea836104fc565b90915550506040805160c08101825260ff80881682526001600160f01b03198716602080840191825283850188815261ffff80891660608701908152426080880181815267ffffffffffffffff808c1660a08b01908152335f81815298899052978c90209a518b54995160f01c6101000262ffffff19909a169a16999099179790971789559351600189015590516002880180549190931661ffff1990911617909155905160038601559251600490940180549490921667ffffffffffffffff19909416939093179055915190917f4dcda657adbf8acdbfeab778fb6f70048079fb2c2e886f9c510d410140b259a09161041d9189918991899189919060ff9590951685526001600160f01b0319939093166020850152604084019190915261ffff166060830152608082015260a00190565b60405180910390a25050505050565b5f805f806080858703121561043f575f80fd5b843560ff8116811461044f575f80fd5b935060208501356001600160f01b03198116811461046b575f80fd5b925060408501359150606085013561ffff81168114610488575f80fd5b939692955090935050565b5f602082840312156104a3575f80fd5b81356001600160a01b03811681146104b9575f80fd5b9392505050565b634e487b7160e01b5f52601160045260245ffd5b67ffffffffffffffff8181168382160190808211156104f5576104f56104c0565b5092915050565b5f6001820161050d5761050d6104c0565b506001019056fea2646970667358221220ebbbd662f6b855524580b47e3919315f9b12347148af3a0dc714da1194b21bc964736f6c63430008180033";
+
+let signer = null;
+let addr = null;
+
+function setStatus(html, kind) {
+  const el = document.getElementById('status');
+  el.className = 'status ' + (kind || '');
+  el.innerHTML = html;
+}
+
+async function connectWallet() {
+  try {
+    const provider = window.avalanche || window.ethereum;
+    if (!provider) {
+      setStatus('No detectamos wallet. Instalá <a href="https://core.app">Core Wallet</a>.', 'error');
+      return;
+    }
+    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+    addr = accounts[0];
+    // Switch a Fuji
+    try {
+      await provider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: FUJI.chainId }] });
+    } catch (sw) {
+      if (sw.code === 4902) {
+        await provider.request({ method: 'wallet_addEthereumChain', params: [FUJI] });
+      }
+    }
+    const ethersProvider = new ethers.BrowserProvider(provider);
+    signer = await ethersProvider.getSigner();
+    document.getElementById('connectBtn').textContent = addr.slice(0,6) + '…' + addr.slice(-4) + ' · Fuji';
+    document.getElementById('deployBtn').disabled = false;
+    setStatus('Wallet conectada en Fuji. Listo para deployar.', 'success');
+  } catch (err) {
+    setStatus('Error: ' + (err.message || err), 'error');
+  }
+}
+
+async function doDeploy() {
+  if (!signer) return;
+  document.getElementById('deployBtn').disabled = true;
+  setStatus('Estimando gas y mandando deploy…');
+  try {
+    const factory = new ethers.ContractFactory(ABI, BYTECODE, signer);
+    const contract = await factory.deploy();
+    const txHash = contract.deploymentTransaction().hash;
+    setStatus(`<div>Deploy enviado · esperando confirmación…</div><div style="margin-top:8px;font-size:11px;">${txHash}</div>`, '');
+    await contract.waitForDeployment();
+    const deployedAddr = await contract.getAddress();
+    setStatus(`
+      <div style="font-weight:700;font-size:16px;color:#065F46;margin-bottom:14px;">✓ ScoreRegistry deployado</div>
+      <div><strong>Address:</strong></div>
+      <div style="font-size:14px;margin:6px 0 12px;">${deployedAddr}</div>
+      <div><strong>Tx hash:</strong></div>
+      <div style="font-size:11px;margin:6px 0 16px;">${txHash}</div>
+      <a href="https://testnet.snowtrace.io/address/${deployedAddr}" target="_blank">Ver en Snowtrace ↗</a>
+      <pre style="margin-top:16px;">// En index.html, reemplazar:
+const SCORE_REGISTRY_ADDRESS = "${deployedAddr}";</pre>
+    `, 'success');
+  } catch (err) {
+    console.error(err);
+    setStatus('Error en deploy: ' + (err.shortMessage || err.message || err), 'error');
+    document.getElementById('deployBtn').disabled = false;
+  }
+}
+</script>
+</body>
+</html>
