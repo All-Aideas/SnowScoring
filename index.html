@@ -1395,9 +1395,9 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
           </label>
           <input type="file" id="fileInput" accept="image/*" />
           <img id="previewImg" class="preview-img" style="display:none" />
-          <div class="api-key-row" style="display:none;">
+          <div class="api-key-row" id="apiKeyRow" style="display:none;">
             <label>Gemini API Key (demo)</label>
-            <input type="password" id="apiKey" placeholder="AIza..." value="AIzaSyAbFzM6W_vE7n7BVvHLRHM6fOKSxjLGTeQ" />
+            <input type="password" id="apiKey" placeholder="AIza..." value="" />
           </div>
           <button id="analyzeBtn" class="btn-primary" disabled>
             <span>Analizar y estandarizar</span>
@@ -1482,6 +1482,7 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script src="config.js" onerror="window.SNOWSCORE_CONFIG=null;"></script>
 <script>
 // ROUTING
 function goTo(page) {
@@ -1718,8 +1719,14 @@ function handleFile() {
 }
 
 analyzeBtn.addEventListener('click', async () => {
-  const apiKey = apiKeyEl.value.trim();
-  if (!apiKey) { alert('Pegá tu Gemini API key primero.'); return; }
+  // Priority: runtime config (config.js, deployed but not committed) → manual input fallback
+  const apiKey = (window.SNOWSCORE_CONFIG && window.SNOWSCORE_CONFIG.GEMINI_API_KEY) || apiKeyEl.value.trim();
+  if (!apiKey) {
+    // No config + no manual key → show the input so user can paste their own
+    document.getElementById('apiKeyRow').style.display = 'block';
+    alert('Pegá tu Gemini API key primero (o creá config.js).');
+    return;
+  }
   if (!currentBase64) return;
 
   analyzeBtn.disabled = true;
