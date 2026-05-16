@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "target": "snowscore-709be",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "files.zip",
+      "STATUS.md",
+      "CLAUDE.md",
+      "README.md",
+      "notion-description.md"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "acta-insights-sj5w4"
+  },
+  "targets": {
+    "acta-insights-sj5w4": {
+      "hosting": {
+        "snowscore-709be": [
+          "snowscore-709be"
+        ]
+      }
+    }
+  }
+}

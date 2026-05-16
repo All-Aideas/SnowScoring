@@ -1,9 +1,10 @@
 # SnowScore — Estado del proyecto
 
-> Última actualización: 2026-05-15
+> Última actualización: 2026-05-15 (sesión wallet + on-chain real)
 
 ## Estado general
-**Hackathon Avalanche** · Deadline: Domingo 9:00 AM
+**Hackathon Avalanche LatAm Institutional** · Deadline: Domingo 9:00 AM
+**Live:** https://snowscore-709be.web.app
 
 ---
 
@@ -18,7 +19,7 @@
 | Login | Mock: email / Google / Core Wallet. Cualquier email entra. |
 | Dashboard | Score 87/A-, greeting dinámico por email. |
 | Upload | Drag & drop + tabs (Ticket / Extracto bancario / Otro) |
-| Financial Reasoning Agent | Gemini 2.0 Flash integrado, JSON mode, prompt LATAM-aware |
+| Financial Reasoning Agent | Gemini 2.5 Flash integrado, JSON mode, prompt LATAM-aware |
 | Loading state | 5 pasos animados (visión → normalización → razonamiento → scoring → on-chain) |
 | Resultados | Behavioral signal + tabla de datos + JSON del schema output |
 | Historial | Auto-append al subir documento, mock de 5 entradas pre-cargadas |
@@ -28,15 +29,22 @@
 | Descarga reporte | JSON descargable con score, categorías, on-chain proof, privacy note |
 | Brand system | Poppins + gradiente #1E3A8A→#7C3AED→#14B8A6, border-radius, cards |
 | Responsive | Mobile-first, sidebar oculta en mobile |
-| On-chain mock | Hash 0xb47f...c91a + link Snowtrace en footer |
+| **Wallet connect (real)** | Botón en dashboard, detecta `window.avalanche`/`window.ethereum`, auto-switch a Fuji |
+| **Anchor on-chain (real)** | keccak256 del score → self-tx con hash en `data` → link Snowtrace |
+| **Deploy producción** | Firebase Hosting → https://snowscore-709be.web.app |
+| **API key segura** | Restringida por HTTP referrer (web.app, firebaseapp.com, localhost) + Gemini API only |
 | GitHub | Repo: github.com/All-Aideas/SnowScoring (branch: master) |
-| README | Completo: problema, solución, API, schema, stack, roadmap |
+| README + MANUAL | README técnico + MANUAL.md de usuario step-by-step |
 
 ### ⏳ Pendiente
 
 | Tarea | Responsable | Notas |
 |-------|------------|-------|
-| Deploy | Cesar | GitHub Pages: Settings → Pages → master/(root) → Save. URL: https://all-aideas.github.io/SnowScoring/ |
+| AVAX en Fuji | Cesar | Builder Hub faucet (con Core conectada) → pedir 2 AVAX a `0x621…90DF` |
+| Test anchor end-to-end | Cesar | Subir doc → Certificar on-chain → verificar tx en Snowtrace |
+| Sección "Para Instituciones" en landing | Cesar | 3 cards: Bankaool/Arkangeles target, problem, KPI |
+| FAQ institucional | Cesar | 4 preguntas al pie de la landing |
+| Ajustar slides | Cesar | 2-3 slides del deck con narrativa institucional |
 | Grabar video demo | Cesar (notebook) | 60-90 seg. Guion en CLAUDE.md §9 |
 
 ### ✅ Entregables no-código
@@ -70,15 +78,30 @@
 | Capa | Tecnología |
 |------|-----------|
 | Frontend | HTML + CSS + JS vanilla, single-file |
-| AI | Gemini 2.0 Flash (multimodal, JSON mode) |
-| Blockchain | Avalanche C-Chain Fuji (mock visual) |
-| Hosting | GitHub Pages (recomendado) / Firebase Hosting |
+| AI | Gemini 2.5 Flash (multimodal, JSON mode) |
+| Blockchain | Avalanche C-Chain Fuji — real anchoring vía ethers.js v6 + Core Wallet |
+| Hosting | Firebase Hosting (snowscore-709be.web.app) |
 
 ---
 
-## Deploy rápido (GitHub Pages)
+## Deploy
 
-1. Ir a **github.com/All-Aideas/SnowScoring/settings/pages**
-2. Source: `Deploy from a branch`
-3. Branch: `master` / `(root)`
-4. **Save** → Live en `https://all-aideas.github.io/SnowScoring/`
+Live: **https://snowscore-709be.web.app**
+
+```bash
+firebase deploy --only hosting:snowscore-709be
+```
+
+Config:
+- `firebase.json`: target `snowscore-709be`, public `.`
+- `.firebaserc`: default project `acta-insights-sj5w4`, target → site `snowscore-709be`
+
+---
+
+## Wallet + On-chain (cómo funciona)
+
+- **Provider:** `window.avalanche` (Core) → fallback `window.ethereum` (MetaMask)
+- **Chain:** Fuji testnet (chainId `0xa869` / 43113), RPC `https://api.avax-test.network/ext/bc/C/rpc`
+- **Auto-switch:** si el usuario está en otra red, la app llama `wallet_switchEthereumChain` y, si no existe, `wallet_addEthereumChain`
+- **Anchor:** `ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(scoreData)))` → self-tx con ese hash en `data`
+- **Verificación:** cualquier banco recalcula keccak256 del score y compara con el hash anclado en Snowtrace

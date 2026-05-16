@@ -4,7 +4,10 @@
 
 SnowScore converts tickets, invoices, and bank statements into a standardized financial behavior score — certified on-chain on Avalanche and accessible via API to banks, fintechs, and lenders.
 
-Built for the **Avalanche Hackathon 2026**.
+Built for the **Avalanche LatAm Institutional Hackathon 2026**.
+
+**Live demo:** https://snowscore-709be.web.app
+**User manual:** [MANUAL.md](./MANUAL.md)
 
 ---
 
@@ -26,10 +29,10 @@ The traditional financial system marks them as "invisible":
 SnowScore is a **Financial Reasoning Agent** that transforms heterogeneous financial documents (receipts, invoices, bank statements) into a standardized credit score, certified on-chain on Avalanche C-Chain.
 
 1. **Capture** — User uploads photos of tickets, utility bills, rent receipts, and bank statements
-2. **Reason** — Gemini 2.0 Flash (multimodal) extracts structured data and reasons about behavioral patterns (recurrence, stability, consistency)
+2. **Reason** — Gemini 2.5 Flash (multimodal) extracts structured data and reasons about behavioral patterns (recurrence, stability, consistency)
 3. **Score** — Calculates a SnowScore (0–100) and grade (A+ to D)
-4. **Certify** — Anchors a proof hash on Avalanche C-Chain (Fuji testnet)
-5. **Share** — Third parties query the score via REST API at $0.12/call
+4. **Certify** — Anchors a `keccak256` proof hash on Avalanche C-Chain Fuji via Core Wallet self-transaction
+5. **Share** — Third parties query the score via REST API at $0.12/call and verify integrity on Snowtrace
 
 ---
 
@@ -114,11 +117,11 @@ Every document is normalized to a single JSON schema:
 | Layer | Technology | Notes |
 |-------|-----------|-------|
 | Frontend | HTML + CSS + JS vanilla | Single-file, deployable to any static host |
-| Fonts | Fraunces · Inter Tight · JetBrains Mono | Via Google Fonts CDN |
-| AI | Gemini 2.0 Flash | Multimodal vision + JSON mode |
+| Fonts | Poppins · JetBrains Mono | Via Google Fonts CDN |
+| AI | Gemini 2.5 Flash | Multimodal vision + JSON mode |
 | Auth | Mock (any email works) | No real backend |
-| Blockchain | Avalanche C-Chain Fuji | Hash mock, link to Snowtrace |
-| Hosting | Firebase Hosting | Planned |
+| Blockchain | Avalanche C-Chain Fuji | Real self-tx anchoring via ethers.js v6 + Core Wallet |
+| Hosting | Firebase Hosting | Live at `snowscore-709be.web.app` |
 
 ### Why Avalanche
 - **Sub-second finality** → reputation as fluid as cash
@@ -177,18 +180,19 @@ To analyze a document, you'll need a [Gemini API key](https://aistudio.google.co
 ## Roadmap
 
 **Hackathon MVP (current)**
-- ✅ Document processing with Gemini 2.0 Flash
+- ✅ Document processing with Gemini 2.5 Flash
 - ✅ Standardization to unified schema
 - ✅ Full UI (landing + login + dashboard)
 - ✅ Spending insights + bank connect mock
 - ✅ Credit report download (JSON)
-- ✅ On-chain proof mock
+- ✅ **Real on-chain anchoring** on Avalanche Fuji via Core Wallet
+- ✅ Live deployment on Firebase Hosting
 
 **Post-hackathon (3 months)**
-- SBT smart contract on Avalanche Fuji → mainnet
+- Backend with API key proxy + auth
+- Dedicated SBT smart contract on Avalanche Fuji → mainnet
 - Public API with authentication and rate limiting
-- Real wallet integration (Core, MetaMask)
-- First pilots with LATAM fintechs
+- First pilots with LATAM fintechs (Bankaool, Arkangeles)
 
 **Scale (6–12 months)**
 - Dedicated Avalanche subnet for financial identity
