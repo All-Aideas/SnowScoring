@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 300" width="840" height="300">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="55%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+    <linearGradient id="hexGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#FAFAF7" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FAFAF7" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Snowflake arm (white version for dark background) -->
+    <g id="armWhite">
+      <rect x="-5" y="-100" width="10" height="95" rx="5" ry="5" fill="#FAFAF7"/>
+      <g transform="translate(0 -82)">
+        <rect x="-3.5" y="-28" width="7" height="30" rx="3.5" ry="3.5" fill="#FAFAF7" transform="rotate(60)"/>
+        <rect x="-3.5" y="-28" width="7" height="30" rx="3.5" ry="3.5" fill="#FAFAF7" transform="rotate(-60)"/>
+      </g>
+      <g transform="translate(0 -52)">
+        <rect x="-3.5" y="-25" width="7" height="27" rx="3.5" ry="3.5" fill="#FAFAF7" transform="rotate(60)"/>
+        <rect x="-3.5" y="-25" width="7" height="27" rx="3.5" ry="3.5" fill="#FAFAF7" transform="rotate(-60)"/>
+      </g>
+      <rect x="-6" y="-111" width="12" height="12" rx="2.5" ry="2.5" transform="rotate(45)" fill="#FAFAF7"/>
+    </g>
+
+    <!-- Small decorative snowflake (faint) -->
+    <g id="armFaint">
+      <rect x="-2" y="-30" width="4" height="28" rx="2" ry="2" fill="#FAFAF7" opacity="0.35"/>
+      <g transform="translate(0 -22)">
+        <rect x="-1.5" y="-10" width="3" height="11" rx="1.5" ry="1.5" fill="#FAFAF7" opacity="0.35" transform="rotate(60)"/>
+        <rect x="-1.5" y="-10" width="3" height="11" rx="1.5" ry="1.5" fill="#FAFAF7" opacity="0.35" transform="rotate(-60)"/>
+      </g>
+    </g>
+  </defs>
+
+  <!-- Background gradient -->
+  <rect x="0" y="0" width="840" height="300" fill="url(#bgGrad)"/>
+
+  <!-- Soft glows -->
+  <circle cx="720" cy="60" r="200" fill="url(#glow)"/>
+  <circle cx="80" cy="280" r="180" fill="url(#glow)"/>
+
+  <!-- Decorative tiny snowflakes -->
+  <g transform="translate(640 70) scale(0.9)">
+    <use href="#armFaint" transform="rotate(0)"/>
+    <use href="#armFaint" transform="rotate(60)"/>
+    <use href="#armFaint" transform="rotate(120)"/>
+    <use href="#armFaint" transform="rotate(180)"/>
+    <use href="#armFaint" transform="rotate(240)"/>
+    <use href="#armFaint" transform="rotate(300)"/>
+  </g>
+  <g transform="translate(770 220) scale(0.7)">
+    <use href="#armFaint" transform="rotate(0)"/>
+    <use href="#armFaint" transform="rotate(60)"/>
+    <use href="#armFaint" transform="rotate(120)"/>
+    <use href="#armFaint" transform="rotate(180)"/>
+    <use href="#armFaint" transform="rotate(240)"/>
+    <use href="#armFaint" transform="rotate(300)"/>
+  </g>
+  <g transform="translate(560 240) scale(0.55)">
+    <use href="#armFaint" transform="rotate(0)"/>
+    <use href="#armFaint" transform="rotate(60)"/>
+    <use href="#armFaint" transform="rotate(120)"/>
+    <use href="#armFaint" transform="rotate(180)"/>
+    <use href="#armFaint" transform="rotate(240)"/>
+    <use href="#armFaint" transform="rotate(300)"/>
+  </g>
+
+  <!-- Main snowflake mark (left) with hex blockchain center -->
+  <g transform="translate(120 150)">
+    <use href="#armWhite" transform="rotate(0)"/>
+    <use href="#armWhite" transform="rotate(60)"/>
+    <use href="#armWhite" transform="rotate(120)"/>
+    <use href="#armWhite" transform="rotate(180)"/>
+    <use href="#armWhite" transform="rotate(240)"/>
+    <use href="#armWhite" transform="rotate(300)"/>
+    <!-- Hex center (block) -->
+    <polygon points="0,-26 22.5,-13 22.5,13 0,26 -22.5,13 -22.5,-13" fill="#FAFAF7"/>
+    <polygon points="0,-19 16.5,-9.5 16.5,9.5 0,19 -16.5,9.5 -16.5,-9.5" fill="url(#hexGrad)"/>
+    <polygon points="0,-9 7.8,-4.5 7.8,4.5 0,9 -7.8,4.5 -7.8,-4.5" fill="#FAFAF7"/>
+  </g>
+
+  <!-- Wordmark + tagline -->
+  <g fill="#FAFAF7" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif">
+    <text x="260" y="148" font-size="58" font-weight="800" letter-spacing="-1.8">SnowScore</text>
+    <text x="262" y="188" font-size="18" font-weight="500" opacity="0.95" letter-spacing="0.3">
+      Tu consumo construye tu identidad financiera
+    </text>
+    <text x="262" y="224" font-size="13" font-weight="400" opacity="0.72" font-family="'JetBrains Mono', monospace" letter-spacing="0.6">
+      Powered by Gemini  ·  Anchored on Avalanche
+    </text>
+  </g>
+</svg>

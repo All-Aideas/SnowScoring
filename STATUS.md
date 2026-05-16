@@ -71,6 +71,11 @@
 **Tipografía principal:** Poppins (400/500/600/700/800)
 **Tipografía técnica:** JetBrains Mono (400/500/700)
 
+### Brand assets
+- `brand/logo.svg` — 512×512 — copo de nieve (6 puntas) con hexágono central (bloque blockchain). Aplicado como favicon + logo del topbar (`.logo-mark` background).
+- `brand/cover.svg` — 840×300 — fondo gradiente + snowflake + wordmark + tagline "Tu consumo construye tu identidad financiera".
+- Concepto del logo: copo de nieve (Snow / Avalanche) + hexágono central (bloque blockchain) con gradiente oficial.
+
 ---
 
 ## Stack técnico

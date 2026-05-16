@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SnowScore — Credit History API for the Invisible Generation</title>
+<link rel="icon" type="image/svg+xml" href="brand/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -53,14 +54,10 @@
     font-size: 22px; letter-spacing: -0.02em; cursor: pointer;
   }
   .logo-mark {
-    width: 28px; height: 28px; background: var(--ink);
-    position: relative; transform: rotate(45deg);
+    width: 36px; height: 36px;
+    background: url('brand/logo.svg') center/contain no-repeat;
+    flex-shrink: 0;
   }
-  .logo-mark::before, .logo-mark::after {
-    content: ''; position: absolute; background: var(--avalanche-red);
-  }
-  .logo-mark::before { inset: 4px; background: var(--snow); }
-  .logo-mark::after { inset: 9px; background: var(--avalanche-red); }
   .nav { display: flex; gap: 32px; align-items: center; }
   .nav a {
     font-size: 14px; color: var(--ink-soft);

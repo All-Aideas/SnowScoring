@@ -110,6 +110,15 @@ Every document is normalized to a single JSON schema:
 **Primary font:** Poppins (400/500/600/700/800) — geometric, clean, accessible
 **Technical font:** JetBrains Mono (400/500/700) — code, API, metadata
 
+### Brand assets
+
+| Asset | Path | Size |
+|-------|------|------|
+| Logo | `brand/logo.svg` | 512×512 |
+| Cover | `brand/cover.svg` | 840×300 |
+
+**Concept:** The logo is a six-pointed snowflake (Snow / Avalanche) with a hexagonal block at its center (blockchain certification), rendered in the official gradient. It carries the brand idea: *consumer behavior becomes verifiable on-chain identity*.
+
 ---
 
 ## Tech Stack
