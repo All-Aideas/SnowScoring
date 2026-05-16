@@ -201,6 +201,22 @@
   .pricing-row .key { color: rgba(250,250,247,0.6); }
   .pricing-row .val { color: var(--snow); font-weight: 700; }
   .pricing-row .val em { color: var(--avalanche-red); font-style: normal; }
+  .api-demo-status {
+    margin-top: 16px; display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: rgba(250,250,247,0.85); letter-spacing: 0.05em;
+  }
+  .api-demo-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--turquoise); box-shadow: 0 0 0 0 rgba(20,184,166,0.6);
+    animation: apiPulse 1.2s infinite;
+  }
+  @keyframes apiPulse {
+    0% { box-shadow: 0 0 0 0 rgba(20,184,166,0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(20,184,166,0); }
+    100% { box-shadow: 0 0 0 0 rgba(20,184,166,0); }
+  }
+  .api-demo-status.success .api-demo-dot { background: var(--turquoise); animation: none; }
 
   .code-block { background: #06060A; border: 1px solid rgba(250,250,247,0.1); overflow: hidden; }
   .code-tabs {
@@ -244,6 +260,45 @@
     margin-bottom: 12px; letter-spacing: -0.01em;
   }
   .uc-desc { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
+  .uc-desc strong { color: var(--ink); font-weight: 600; }
+
+  /* INSTITUTIONAL + FAQ */
+  .institutional {
+    padding: 100px 48px; max-width: 1400px; margin: 0 auto;
+    border-top: 1px solid rgba(10,10,15,0.08);
+  }
+  .faq {
+    padding: 100px 48px 120px; max-width: 900px; margin: 0 auto;
+    border-top: 1px solid rgba(10,10,15,0.08);
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .faq-item {
+    background: var(--snow-warm); border: 1px solid rgba(10,10,15,0.1);
+    border-radius: 16px; padding: 20px 24px; transition: all 0.2s ease;
+  }
+  .faq-item[open] { border-color: var(--violet); background: var(--lavender); }
+  .faq-item summary {
+    cursor: pointer; font-family: 'Poppins', sans-serif;
+    font-size: 16px; font-weight: 500; color: var(--ink);
+    list-style: none; display: flex; align-items: center; justify-content: space-between;
+    letter-spacing: -0.005em;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: '+'; font-family: 'JetBrains Mono', monospace;
+    font-size: 22px; color: var(--violet); margin-left: 16px;
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] summary::after { content: '−'; }
+  .faq-item p {
+    margin: 14px 0 4px; font-size: 14px; line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .faq-item code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: rgba(124,58,237,0.1); padding: 2px 6px; border-radius: 4px;
+    color: var(--violet);
+  }
 
   /* LOGIN */
   .login-wrap {
@@ -342,6 +397,26 @@
   .dash-header {
     display: flex; justify-content: space-between; align-items: flex-end;
     margin-bottom: 40px; flex-wrap: wrap; gap: 24px;
+  }
+  .anchor-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 100px;
+    background: linear-gradient(135deg, #EDE9FE, #fff);
+    border: 1px solid #7C3AED;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #1E3A8A; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .anchor-badge:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(124,58,237,0.18); }
+  .anchor-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #14B8A6; box-shadow: 0 0 0 0 rgba(20,184,166,0.5);
+    animation: anchorPulse 2s infinite;
+  }
+  @keyframes anchorPulse {
+    0% { box-shadow: 0 0 0 0 rgba(20,184,166,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(20,184,166,0); }
+    100% { box-shadow: 0 0 0 0 rgba(20,184,166,0); }
   }
   .dash-title {
     font-family: 'Poppins', sans-serif; font-size: 44px; font-weight: 500;
@@ -696,7 +771,7 @@
     .topbar-meta { display: none; }
     .hero { padding: 48px 24px 40px; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 32px 24px; }
-    .how, .api-section, .usecases { padding: 60px 24px; }
+    .how, .api-section, .usecases, .institutional, .faq { padding: 60px 24px; }
     .api-inner { grid-template-columns: 1fr; gap: 32px; }
     .steps { grid-template-columns: 1fr; gap: 32px; }
     .uc-grid { grid-template-columns: 1fr; }
@@ -991,6 +1066,13 @@
           <span class="key">Sandbox / Testnet</span>
           <span class="val"><em>Gratis</em></span>
         </div>
+        <button class="btn btn-dark" id="tryApiBtn" onclick="tryApiDemo()" style="margin-top:24px;">
+          Probar la API en vivo →
+        </button>
+        <div id="apiDemoStatus" class="api-demo-status" style="display:none;">
+          <span class="api-demo-dot"></span>
+          <span id="apiDemoText">POST /v1/score · enviando…</span>
+        </div>
       </div>
       <div class="api-right">
         <div class="code-block">
@@ -1051,6 +1133,67 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
           de colateral excesivo. La capa de confianza que le faltaba a Web3.
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="institutional" id="institutional">
+    <div class="section-eyebrow">— Para Instituciones</div>
+    <h2 class="section-title">Hecho para los <em>partners institucionales</em><br>del hackathon Avalanche LatAm.</h2>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-icon"><span>B</span></div>
+        <div class="uc-title">Bankaool · Microcrédito México</div>
+        <div class="uc-desc">
+          <strong>Problema:</strong> evaluar solvencia de PyMEs y trabajadores informales sin historial en buró.<br><br>
+          <strong>SnowScore:</strong> score verificable desde tickets, servicios y extractos en menos de 3 segundos.<br><br>
+          <strong>KPI esperado:</strong> +35% de aprobaciones con la misma tasa de mora.
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon"><span>⌂</span></div>
+        <div class="uc-title">Arkangeles · Real Estate</div>
+        <div class="uc-desc">
+          <strong>Problema:</strong> propietarios e inversionistas necesitan validar inquilinos sin pedir recibo de sueldo.<br><br>
+          <strong>SnowScore:</strong> certificado on-chain de consistencia de pago de servicios y alquileres previos.<br><br>
+          <strong>KPI esperado:</strong> -60% de tiempo de evaluación por contrato.
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon"><span>◇</span></div>
+        <div class="uc-title">Fintechs LATAM</div>
+        <div class="uc-desc">
+          <strong>Problema:</strong> 70% de jóvenes y trabajadores informales son invisibles para el buró tradicional.<br><br>
+          <strong>SnowScore:</strong> API REST plug-and-play, $0.12/call, datos normalizados a schema único multi-país.<br><br>
+          <strong>KPI esperado:</strong> nueva línea de negocio sin riesgo de capital.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="section-eyebrow">— Preguntas frecuentes (institucional)</div>
+    <h2 class="section-title">Lo que <em>el área de riesgo</em><br>siempre nos pregunta.</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>¿Cómo manejan la privacidad del usuario y el consentimiento?</summary>
+        <p>El usuario es dueño de sus datos. SnowScore procesa los documentos y guarda únicamente el score y un hash criptográfico (keccak256) on-chain. Nunca exponemos tickets, montos ni merchants a terceros. Cada consulta de la API requiere consentimiento explícito vía wallet del usuario.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Reemplaza al proceso de KYC tradicional?</summary>
+        <p>No. SnowScore es una capa complementaria al KYC: aporta señales de comportamiento financiero (recurrencia, estabilidad, capacidad de pago) que el KYC no captura. Se integra como input adicional al motor de decisión de crédito, no como sustituto del compliance regulatorio.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Qué pasa con las regulaciones (BCRA, CNV, CNBV)?</summary>
+        <p>Trabajamos sobre Avalanche C-Chain con anchoring de hashes (no PII on-chain). El modelo de scoring es explicable y auditable: cada score viene con su breakdown de señales. Roadmap incluye certificación bajo marcos regulatorios locales por país (Argentina, México, Colombia, Brasil).</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Cómo se integra técnicamente con nuestro core bancario?</summary>
+        <p>API REST estándar (Bearer auth, JSON). El endpoint <code>POST /v1/score</code> devuelve score + grade + confidence + on_chain_proof. Latencia objetivo &lt; 500ms para lookups, &lt; 3s para análisis nuevo. SDK oficial para Node, Python y Java en roadmap post-hackathon.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Por qué Avalanche y no otra blockchain?</summary>
+        <p>Finalidad sub-segundo (UX equivalente a una API web2), costos por anchor &lt; $0.01 (viable para LATAM), y la posibilidad de migrar a una L1 dedicada para identidad financiera. Además, el ecosistema institucional de Avalanche en LatAm hace al stack defendible frente a compliance.</p>
+      </details>
     </div>
   </section>
 
@@ -1127,6 +1270,7 @@ curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \
           <div class="dash-subtitle">Última sincronización · hace 2 min · 142 datos analizados</div>
         </div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <div id="lastAnchorBadge" class="anchor-badge" style="display:none;" title="Ver última certificación on-chain"></div>
           <button id="walletBtn" class="btn btn-outline" onclick="connectWallet()">
             <span>Conectar Wallet</span>
           </button>
@@ -1363,6 +1507,59 @@ function doLogin() {
 }
 function logout() { goTo('landing'); }
 
+// API DEMO (simulated call, real-looking response)
+function tryApiDemo() {
+  const btn = document.getElementById('tryApiBtn');
+  const box = document.getElementById('apiDemoStatus');
+  const txt = document.getElementById('apiDemoText');
+  const code = document.querySelector('.code-body');
+  if (!btn || !box || !txt || !code) return;
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  box.style.display = 'flex';
+  box.classList.remove('success');
+  const steps = [
+    'POST /v1/score · autenticando…',
+    'Resolviendo wallet 0xA3f…8E2…',
+    'Consultando capa on-chain (Fuji)…',
+    'Calculando score behavioral…',
+    'Firmando respuesta · 142 datapoints'
+  ];
+  let i = 0;
+  txt.textContent = steps[0];
+  const interval = setInterval(() => {
+    i++;
+    if (i < steps.length) { txt.textContent = steps[i]; return; }
+    clearInterval(interval);
+    box.classList.add('success');
+    const score = 84 + Math.floor(Math.random() * 6);
+    const grade = score >= 88 ? 'A' : (score >= 85 ? 'A-' : 'B+');
+    const conf = (0.91 + Math.random() * 0.06).toFixed(2);
+    const dp = 130 + Math.floor(Math.random() * 25);
+    const flow = 320000 + Math.floor(Math.random() * 80000);
+    const proof = '0x' + Array.from({length:8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '…' + Array.from({length:4}, () => Math.floor(Math.random()*16).toString(16)).join('');
+    txt.textContent = '200 OK · ' + (180 + Math.floor(Math.random()*120)) + 'ms';
+    code.innerHTML = '<span class="c-cmt"># Live response from sandbox</span>\n' +
+      'curl <span class="c-str">"https://api.snowscore.xyz/v1/score"</span> \\\n' +
+      '  -H <span class="c-str">"Authorization: Bearer sk_test_..."</span> \\\n' +
+      '  -d <span class="c-str">\'{ "wallet": "0xA3f...8E2" }\'</span>\n\n' +
+      '<span class="c-cmt"># 200 OK · sandbox · ' + new Date().toISOString() + '</span>\n' +
+      '{\n' +
+      '  <span class="c-key">"score"</span>: <span class="c-num">' + score + '</span>,\n' +
+      '  <span class="c-key">"grade"</span>: <span class="c-str">"' + grade + '"</span>,\n' +
+      '  <span class="c-key">"confidence"</span>: <span class="c-num">' + conf + '</span>,\n' +
+      '  <span class="c-key">"data_points"</span>: <span class="c-num">' + dp + '</span>,\n' +
+      '  <span class="c-key">"recurring_payments"</span>: <span class="c-num">' + (7 + Math.floor(Math.random()*4)) + '</span>,\n' +
+      '  <span class="c-key">"avg_monthly_flow"</span>: <span class="c-num">' + flow + '</span>,\n' +
+      '  <span class="c-key">"on_chain_proof"</span>: <span class="c-str">"' + proof + '"</span>,\n' +
+      '  <span class="c-key">"chain"</span>: <span class="c-str">"avalanche-c"</span>,\n' +
+      '  <span class="c-key">"verified"</span>: <span class="c-num">true</span>\n' +
+      '}';
+    setTimeout(() => { btn.disabled = false; btn.style.opacity = '1'; }, 800);
+  }, 650);
+}
+window.tryApiDemo = tryApiDemo;
+
 // WALLET / ON-CHAIN ANCHOR (Avalanche Fuji)
 const FUJI = {
   chainId: '0xa869', // 43113
@@ -1429,20 +1626,49 @@ async function anchorOnChain(scoreData) {
     statusBox.innerHTML = `<span>Tx enviada · esperando confirmación… <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">${tx.hash.slice(0,18)}…</code></span>`;
     const receipt = await tx.wait();
     const url = `https://testnet.snowtrace.io/tx/${tx.hash}`;
+    // Persistir tx para que sobreviva al reload
+    try {
+      localStorage.setItem('snowscore_last_tx', JSON.stringify({
+        hash: tx.hash, url, ts: Date.now(), addr: walletAddr, score: scoreData
+      }));
+    } catch(_) {}
     statusBox.innerHTML = `
       <div style="padding:14px;border-radius:12px;background:linear-gradient(135deg,#EDE9FE,#fff);border:1px solid #7C3AED;">
         <div style="font-weight:600;color:#1E3A8A;margin-bottom:6px;">✓ Anclado en Avalanche Fuji</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;color:#444;">${tx.hash}</div>
         <div style="margin-top:8px;"><a href="${url}" target="_blank" style="color:#7C3AED;font-weight:600;">Ver en Snowtrace ↗</a></div>
       </div>`;
-    // Actualizar footer
-    const footer = document.querySelector('.footer span:nth-child(2)');
-    if (footer) footer.innerHTML = `Tx anclada: ${tx.hash.slice(0,6)}…${tx.hash.slice(-4)} · <a href="${url}" target="_blank" style="color:inherit;text-decoration:underline;">Ver en Snowtrace</a>`;
+    updateAnchorBadge(tx.hash, url);
   } catch (err) {
     console.error(err);
     statusBox.innerHTML = `<span style="color:#b91c1c;">Error: ${err.shortMessage || err.message || err}</span>`;
   }
 }
+
+function updateAnchorBadge(hash, url) {
+  // Footer del landing
+  const footer = document.querySelector('.footer span:nth-child(2)');
+  if (footer) footer.innerHTML = `Última tx anclada: <code style="font-family:'JetBrains Mono',monospace;font-size:11px;">${hash.slice(0,6)}…${hash.slice(-4)}</code> · <a href="${url}" target="_blank" style="color:inherit;text-decoration:underline;">Ver en Snowtrace</a>`;
+  // Badge en el dashboard header
+  const badge = document.getElementById('lastAnchorBadge');
+  if (badge) {
+    badge.style.display = 'inline-flex';
+    badge.innerHTML = `<span class="anchor-dot"></span><span>On-chain · ${hash.slice(0,6)}…${hash.slice(-4)}</span>`;
+    badge.onclick = () => window.open(url, '_blank');
+  }
+}
+
+function restoreAnchorState() {
+  try {
+    const raw = localStorage.getItem('snowscore_last_tx');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data && data.hash && data.url) {
+      updateAnchorBadge(data.hash, data.url);
+    }
+  } catch(_) {}
+}
+document.addEventListener('DOMContentLoaded', restoreAnchorState);
 
 // UPLOAD
 const fileInput  = document.getElementById('fileInput');
