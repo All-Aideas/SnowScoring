@@ -195,6 +195,10 @@ To analyze a document, you'll need a [Gemini API key](https://aistudio.google.co
 - ✅ Spending insights + bank connect mock
 - ✅ Credit report download (JSON)
 - ✅ **Real on-chain anchoring** on Avalanche Fuji via Core Wallet
+- ✅ **Persistent anchor state** (localStorage + pulsing badge in dashboard header)
+- ✅ **Institutional landing section** for Bankaool, Arkangeles and LATAM fintechs
+- ✅ **Institutional FAQ** (privacy, KYC, regulation, integration, Avalanche rationale)
+- ✅ **Live API demo button** that simulates a real POST /v1/score response
 - ✅ Live deployment on Firebase Hosting
 
 **Post-hackathon (3 months)**

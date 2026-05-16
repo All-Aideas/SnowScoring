@@ -57,7 +57,9 @@ El AVAX de Fuji es gratuito (no tiene valor real). Opciones:
 
 1. Abrí https://snowscore-709be.web.app
 2. Leé la propuesta, scrolleá hasta ver el flow diagram, las stats y la API docs
-3. Click en **"Comenzar"** (botón violeta arriba a la derecha)
+3. En la sección **API** podés probar la API en vivo con el botón **"Probar la API en vivo →"** (simula un POST /v1/score y reemplaza el code-block con la respuesta JSON real con score/grade/confidence/proof)
+4. Más abajo está la sección **"Para Instituciones"** (Bankaool, Arkangeles, Fintechs LATAM) y el **FAQ institucional** (privacidad, KYC, regulación, integración, Avalanche)
+5. Click en **"Comenzar"** (botón violeta arriba a la derecha)
 
 ### 4.2. Login
 
@@ -107,6 +109,7 @@ Vas a ver:
    - Hash de la transacción
    - Link directo a Snowtrace para verificarla
 7. El footer se actualiza con el hash anclado
+8. En el header del dashboard aparece un **badge persistente "On-chain · 0x…"** con dot pulsante turquesa (clickeable, abre Snowtrace). El badge sobrevive al reload de la página gracias a `localStorage`.
 
 > El costo es ≈ 0.001 AVAX (centavos de testnet, no tiene valor real).
 

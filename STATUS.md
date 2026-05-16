@@ -1,6 +1,6 @@
 # SnowScore — Estado del proyecto
 
-> Última actualización: 2026-05-15 (sesión wallet + on-chain real)
+> Última actualización: 2026-05-16 (sesión institucional + FAQ + API demo + anchor persistente)
 
 ## Estado general
 **Hackathon Avalanche LatAm Institutional** · Deadline: Domingo 9:00 AM
@@ -31,6 +31,10 @@
 | Responsive | Mobile-first, sidebar oculta en mobile |
 | **Wallet connect (real)** | Botón en dashboard, detecta `window.avalanche`/`window.ethereum`, auto-switch a Fuji |
 | **Anchor on-chain (real)** | keccak256 del score → self-tx con hash en `data` → link Snowtrace |
+| **Anchor persistente** | `localStorage.snowscore_last_tx` + badge pulsante en dash-header (sobrevive al reload) |
+| **Sección "Para Instituciones"** | 3 cards (Bankaool, Arkangeles, Fintechs LATAM) con problema/solución/KPI |
+| **FAQ institucional** | 5 preguntas en `<details>` animados (privacidad, KYC, regulación, integración, Avalanche) |
+| **API demo en vivo** | Botón "Probar la API en vivo" → 5 pasos animados → reemplaza code-block con respuesta JSON real |
 | **Deploy producción** | Firebase Hosting → https://snowscore-709be.web.app |
 | **API key segura** | Restringida por HTTP referrer (web.app, firebaseapp.com, localhost) + Gemini API only |
 | GitHub | Repo: github.com/All-Aideas/SnowScoring (branch: master) |
@@ -42,8 +46,7 @@
 |-------|------------|-------|
 | AVAX en Fuji | Cesar | Builder Hub faucet (con Core conectada) → pedir 2 AVAX a `0x621…90DF` |
 | Test anchor end-to-end | Cesar | Subir doc → Certificar on-chain → verificar tx en Snowtrace |
-| Sección "Para Instituciones" en landing | Cesar | 3 cards: Bankaool/Arkangeles target, problem, KPI |
-| FAQ institucional | Cesar | 4 preguntas al pie de la landing |
+| Redeploy Firebase | Cesar | `firebase deploy --only hosting:snowscore-709be` (con los cambios del 2026-05-16) |
 | Ajustar slides | Cesar | 2-3 slides del deck con narrativa institucional |
 | Grabar video demo | Cesar (notebook) | 60-90 seg. Guion en CLAUDE.md §9 |
 
