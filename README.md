@@ -26,12 +26,12 @@ The traditional financial system marks them as "invisible":
 
 ## The Solution
 
-SnowScore is a **Financial Reasoning Agent** that transforms heterogeneous financial documents (receipts, invoices, bank statements) into a standardized credit score, certified on-chain on Avalanche C-Chain.
+SnowScore is a **Financial Reasoning Agent** that transforms heterogeneous financial documents (receipts, invoices, bank statements) into a standardized credit score. On-chain anchoring on Avalanche is **optional** — institutions can consume the score even if the user has no wallet.
 
 1. **Capture** — User uploads photos of tickets, utility bills, rent receipts, bank statements **and crypto transaction hashes** (USDC/USDT inflows, on-chain remittances)
 2. **Reason** — Gemini 2.5 Flash (multimodal) extracts structured data and reasons about behavioral patterns (recurrence, stability, consistency)
-3. **Score** — Calculates a SnowScore (0–100) and grade (A+ to D)
-4. **Certify** — Anchors a `keccak256` proof hash on Avalanche C-Chain Fuji via Core Wallet — either as self-transaction (default) or by calling the `ScoreRegistry` contract (when deployed)
+3. **Score** — Calculates a SnowScore (0–100) and grade (A+ to D). Like snow accumulating, **the score is built by sustained patterns over time**, not by a single receipt — 12 months of paid rent weighs infinitely more than one isolated invoice.
+4. **(Optional) Certify** — If the user has a wallet, the proof hash is anchored on Avalanche C-Chain Fuji via Core Wallet — either as self-transaction (default) or by calling the `ScoreRegistry` contract (when deployed). This makes the reputation portable and verifiable by any third party without asking SnowScore.
 5. **Share** — Third parties query the score via REST API at $0.12/call and verify integrity on Snowtrace or via the in-app `/verify` page
 
 ---
@@ -195,7 +195,13 @@ flowchart TD
     classDef consumer fill:#14B8A6,stroke:#1E3A8A,color:#FFFFFF,stroke-width:2px
 ```
 
-**Key insight:** the hash is **deterministic**. Anyone holding the canonical payload can recompute `keccak256(JSON.stringify(payload))` locally and verify it matches what was anchored on Avalanche — **no trust in SnowScore required**. The `/verify` page does exactly this in the browser of the institution consuming the score.
+**Two key insights:**
+
+1. **Why "Snow"Score → time is the primitive.** Just like a snowfall: a single flake doesn't matter, the layer accumulated over months does. Each datapoint is weighted by how long the user has sustained the pattern (12 months of paid rent ≫ a one-off invoice). Recency, recurrence, and consistency are the three dimensions that compound into the score — not the absolute amount of any single transaction.
+
+2. **The hash is deterministic.** Anyone holding the canonical payload can recompute `keccak256(JSON.stringify(payload))` locally and verify it matches what was anchored on Avalanche — **no trust in SnowScore required**. The `/verify` page does exactly this in the browser of the institution consuming the score.
+
+> **Wallet is optional.** A user without a wallet still gets a SnowScore consumable via API. The wallet only adds **portability** (the user owns the proof) and **third-party verifiability** (anyone can check Snowtrace). For unbanked LATAM users, the score works before they ever touch crypto.
 
 ---
 
