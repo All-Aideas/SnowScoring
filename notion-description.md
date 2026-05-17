@@ -121,44 +121,44 @@ SnowScore es **gratuito para el usuario final**. Monetizamos cobrando a las inst
 
 ---
 
-## 7. Stack del MVP (hackathon build)
+## 7. Stack técnico
 
-- **Frontend:** HTML + CSS + JavaScript vanilla (single-file, deployable en Firebase Hosting)
-- **AI:** Gemini 2.0 Flash API (multimodal vision + JSON mode)
-- **Blockchain (roadmap):** Avalanche Fuji Testnet, smart contract en Solidity para emisión de SBT
-- **Auth (mock):** simulación de login con email/Google/Wallet
-- **Hosting:** Firebase Hosting o cualquier static host
+- **Frontend:** HTML + CSS + JavaScript vanilla (single-page, sin build steps, deployable en cualquier static host)
+- **AI:** Gemini 2.5 Flash (multimodal vision + JSON mode estructurado)
+- **Blockchain:** Avalanche C-Chain, contrato `ScoreRegistry.sol` (Solidity 0.8.20) con `anchorScore(score, grade, hash, confidence)` + evento `ScoreAnchored`. Anchoring vía Core Wallet + ethers.js v6
+- **Crypto primitives:** `keccak256` sobre payload canónico → hash determinístico recomputable en navegador del consumidor
+- **Auth:** login simulado para demo (email/Google/Wallet) — gateway productivo en roadmap institucional
+- **Hosting:** Firebase Hosting (https://snowscore-709be.web.app)
 
-### Pantallas implementadas
+### Pantallas y endpoints
 
-1. **Landing page** con propuesta de valor, stats y documentación de API
-2. **Login** con múltiples métodos (email, Google, Core Wallet)
-3. **Dashboard** con score actual, upload multi-formato (tickets / extractos / otros), análisis en vivo con Gemini, e historial estandarizado
+1. **Landing institucional** con stats, casos de uso, sección institucional (Bankaool / Arkangeles / Fintechs LATAM), FAQ para área de riesgo, demo de API en vivo
+2. **Login** con email/Google/Core Wallet + modo demo "María Pérez" pre-cargado
+3. **Dashboard** con score, upload multi-formato (tickets / extractos / cripto-hash), análisis en vivo con Gemini, historial estandarizado, conexión a wallet y anchor on-chain
+4. **`/verify?tx=0x...`** con lectura on-chain real (`JsonRpcProvider`) + recompute de hash en navegador (`keccak256`) → verificación trust-minimized
 
 ---
 
 ## 8. Roadmap
 
-**Hackathon (MVP actual)**
+### Now — Entregable del hackathon
+Stack completo en producción: Reasoning Agent, scoring engine, `ScoreRegistry` en Avalanche, página de verificación pública, narrativa institucional, demo en vivo.
 
-- ✅ Procesamiento de documentos con Gemini
-- ✅ Standardización a schema único
-- ✅ UI completa (landing + login + dashboard)
-- ✅ Mock del on-chain proof
+### Q3 2026 — Pilotos
+- Primeros 2–3 pilotos en producción con partners LATAM (microcrédito, real estate, BNPL)
+- SDKs oficiales en Node, Python y Java
+- Gateway productivo de API con auth org-level, rate limiting y billing por call
+- Integraciones con cores bancarios (Galicia, Mercado Pago, Naranja X)
 
-**Post-hackathon (3 meses)**
+### Q4 2026 → 2027 — Capa institucional
+- L1 dedicada en Avalanche para identidad financiera (finalidad sub-segundo, reglas soberanas por jurisdicción)
+- Certificaciones regulatorias por país: BCRA y CNV (Argentina), CNBV (México), SFC (Colombia), BACEN (Brasil)
+- Bridges cross-chain → cualquier protocolo de lending EVM consume el score
+- Marketplace de underwriting: los lenders bidean en tiempo real sobre usuarios calificados que opten por compartir score
 
-- Smart contract de SBT en Avalanche Fuji → mainnet
-- API pública con autenticación y rate limiting
-- Integración real con wallets (Core, MetaMask)
-- Primeros pilotos con fintechs LATAM
-
-**Escala (6–12 meses)**
-
-- Subnet dedicada en Avalanche para identidad financiera
-- Compliance regulatorio (BCRA, CNV en Argentina; equivalentes regionales)
-- Expansión a México, Colombia y Brasil
-- SDK oficial para integradores
+### 2027 → en adelante
+- Cobertura en todas las economías LATAM principales, luego África y Sudeste Asiático
+- Protocolo abierto: cualquier institución puede aportar contribuciones al score del usuario (alquiler, telecom, educación) → SnowScore como capa de referencia de trust para la economía no bancarizada
 
 ---
 

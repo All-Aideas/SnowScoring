@@ -31,7 +31,7 @@ SnowScore is a **Financial Reasoning Agent** that transforms heterogeneous finan
 1. **Capture** — User uploads photos of tickets, utility bills, rent receipts, bank statements **and crypto transaction hashes** (USDC/USDT inflows, on-chain remittances)
 2. **Reason** — Gemini 2.5 Flash (multimodal) extracts structured data and reasons about behavioral patterns (recurrence, stability, consistency)
 3. **Score** — Calculates a SnowScore (0–100) and grade (A+ to D). Like snow accumulating, **the score is built by sustained patterns over time**, not by a single receipt — 12 months of paid rent weighs infinitely more than one isolated invoice.
-4. **(Optional) Certify** — If the user has a wallet, the proof hash is anchored on Avalanche C-Chain Fuji via Core Wallet — either as self-transaction (default) or by calling the `ScoreRegistry` contract (when deployed). This makes the reputation portable and verifiable by any third party without asking SnowScore.
+4. **(Optional) Certify** — If the user has a wallet, the proof hash is anchored on Avalanche C-Chain via Core Wallet and routed through the `ScoreRegistry` contract (`anchorScore(score, grade, hash, confidence)` emitting the `ScoreAnchored` event). This makes the reputation portable and verifiable by any third party without asking SnowScore.
 5. **Share** — Third parties query the score via REST API at $0.12/call and verify integrity on Snowtrace or via the in-app `/verify` page
 
 ---
@@ -235,35 +235,30 @@ To analyze a document, you'll need a [Gemini API key](https://aistudio.google.co
 
 ## Roadmap
 
-**Hackathon MVP (current)**
-- ✅ Document processing with Gemini 2.5 Flash
-- ✅ Standardization to unified schema
-- ✅ Full UI (landing + login + dashboard)
-- ✅ Spending insights + bank connect mock
-- ✅ Credit report download (JSON)
-- ✅ **Real on-chain anchoring** on Avalanche Fuji via Core Wallet
-- ✅ **Persistent anchor state** (localStorage + pulsing badge in dashboard header)
-- ✅ **Institutional landing section** for Bankaool, Arkangeles and LATAM fintechs
-- ✅ **Institutional FAQ** (privacy, KYC, regulation, integration, Avalanche rationale)
-- ✅ **Live API demo button** that simulates a real POST /v1/score response
-- ✅ **Crypto / hash document type** (USDC/USDT inflows, on-chain remittances) — first-class citizen in the upload flow
-- ✅ **ScoreRegistry smart contract** (`contracts/ScoreRegistry.sol`, Solidity 0.8.20) + one-click `deploy.html`
-- ✅ **In-app `/verify` page** — read tx/receipt/block from Fuji via `JsonRpcProvider` and show full score payload
-- ✅ **Demo mode "María Pérez"** — login pill that pre-loads 9 documents (including USDT/USDC), persisted demo tx and active on-chain badge
-- ✅ API key extracted to gitignored `config.js` (with manual fallback)
-- ✅ Live deployment on Firebase Hosting
+### Now — Shipped at the Avalanche LatAm Hackathon
+Full vertical slice of the SnowScore protocol, live in production:
+- **Multimodal Financial Reasoning Agent** (Gemini 2.5 Flash) that standardizes tickets, bank statements and crypto inflows into a single canonical schema
+- **SnowScore engine** (0–100 + grade A+/D) weighted by recurrence, stability and consistency over time
+- **`ScoreRegistry` contract on Avalanche** with `anchorScore()` + `ScoreAnchored` event — score becomes a portable, third-party-verifiable artifact
+- **`/verify` page** with browser-side `keccak256` recompute — institutions audit the proof without trusting SnowScore
+- **Institutional UX**: live API demo, FAQ for risk teams, use-case grid for Bankaool / Arkangeles / LATAM fintechs
+- **Demo mode "María Pérez"** for one-click jury walkthrough
 
-**Post-hackathon (3 months)**
-- Backend with API key proxy + auth
-- Dedicated SBT smart contract on Avalanche Fuji → mainnet
-- Public API with authentication and rate limiting
-- First pilots with LATAM fintechs (Bankaool, Arkangeles)
+### Q3 2026 — Pilot wave
+- First **production pilots** with 2–3 LATAM partners (microcredit, real estate, BNPL)
+- **Official SDK** for Node, Python and Java
+- **Backend API gateway** with org-level auth, rate limiting and per-call billing
+- **Webhook integration** with core banking systems (Galicia, Mercado Pago, Naranja X)
 
-**Scale (6–12 months)**
-- Dedicated Avalanche subnet for financial identity
-- Regulatory compliance (BCRA, CNV in Argentina)
-- Expansion to Mexico, Colombia, and Brazil
-- Official SDK for integrators
+### Q4 2026 → 2027 — Institutional layer
+- **Dedicated Avalanche L1** for financial identity (sub-second finality, sovereign rules per jurisdiction)
+- **Regulatory certifications** by country: BCRA & CNV (Argentina), CNBV (México), SFC (Colombia), BACEN (Brasil)
+- **Cross-chain identity bridges** so a SnowScore minted on Avalanche is consumable from any EVM lending protocol
+- **Underwriting marketplace**: lenders bid in real-time on qualified users who opt-in to share their score
+
+### 2027 → beyond — The trust layer for the invisible economy
+- Coverage across all major LATAM economies, then Africa and South-East Asia
+- **Open protocol**: any institution can issue contributions to a user's score (rent, telecom, education) → SnowScore becomes the reference layer for trust in the unbanked economy
 
 ---
 
