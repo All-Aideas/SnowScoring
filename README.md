@@ -142,19 +142,60 @@ Every document is normalized to a single JSON schema:
 
 ## Value Flow
 
+End-to-end flow from a user's invisible financial activity to a verifiable on-chain credit score consumed by institutions.
+
+```mermaid
+flowchart TD
+    %% --- Capture layer ---
+    A1["🧾 Tickets &<br/>facturas (LATAM)"]:::input
+    A2["🏦 Extractos<br/>bancarios"]:::input
+    A3["⛓ Hashes cripto<br/>USDC / USDT / remesas"]:::input
+
+    %% --- Reasoning layer ---
+    B["🧠 Financial Reasoning Agent<br/><i>Gemini 2.5 Flash · multimodal</i><br/>Extrae · Normaliza · Razona patrones"]:::ai
+
+    %% --- Standardization ---
+    C["📐 Schema canónico SnowScore<br/>merchant · category · amount · currency<br/>is_recurring · reliability_score"]:::schema
+
+    %% --- Scoring ---
+    D["📊 SnowScore<br/><b>0–100 · grade A+ a D</b><br/>Recurrencia · Estabilidad · Consistencia"]:::score
+
+    %% --- On-chain anchoring ---
+    E["🔐 Hash criptográfico<br/><i>keccak256(payload canónico)</i>"]:::hash
+    F1["📜 ScoreRegistry.sol<br/><i>anchorScore(score, grade, hash, conf)</i><br/>Avalanche Fuji · evento ScoreAnchored"]:::chain
+    F2["✉ Self-tx con hash<br/><i>fallback sin contrato</i>"]:::chain
+
+    %% --- Verification & consumption ---
+    G["🌐 /verify?tx=0x...<br/>Recompute keccak256 en navegador<br/>+ lectura Fuji vía JsonRpcProvider"]:::verify
+    H["🔍 Snowtrace<br/><i>backup público</i>"]:::verify
+    I["🏛 Bancos · Fintechs · Real Estate · DeFi<br/><b>POST /v1/score · $0.12/call</b>"]:::consumer
+
+    A1 --> B
+    A2 --> B
+    A3 --> B
+    B --> C
+    C --> D
+    D --> E
+    E -->|primario| F1
+    E -.->|fallback| F2
+    F1 --> G
+    F1 --> H
+    F2 --> G
+    F2 --> H
+    G --> I
+    H --> I
+
+    classDef input fill:#EDE9FE,stroke:#7C3AED,color:#1E3A8A,stroke-width:1.5px
+    classDef ai fill:#1E3A8A,stroke:#7C3AED,color:#FFFFFF,stroke-width:2px
+    classDef schema fill:#F5F3FF,stroke:#7C3AED,color:#1E3A8A,stroke-width:1.5px
+    classDef score fill:#7C3AED,stroke:#1E3A8A,color:#FFFFFF,stroke-width:2px
+    classDef hash fill:#0F172A,stroke:#14B8A6,color:#14B8A6,stroke-width:1.5px
+    classDef chain fill:#E84142,stroke:#1E3A8A,color:#FFFFFF,stroke-width:1.5px
+    classDef verify fill:#CCFBF1,stroke:#14B8A6,color:#0F172A,stroke-width:1.5px
+    classDef consumer fill:#14B8A6,stroke:#1E3A8A,color:#FFFFFF,stroke-width:2px
 ```
-[Tickets + Historial bancario]
-        ↓
-[Financial Reasoning Agent — Gemini 2.0 Flash Multimodal]
-  01 · Extrae datos
-  02 · Normaliza schema
-  03 · Razona patrones
-        ↓
-[SnowScore 87 / A− ⟐ Avalanche C-Chain — Hash anclado on-chain]
-        ↓
-[Bancos / Fintechs / Propiedades / DeFi]
-  POST /v1/score · $0.12/call
-```
+
+**Key insight:** the hash is **deterministic**. Anyone holding the canonical payload can recompute `keccak256(JSON.stringify(payload))` locally and verify it matches what was anchored on Avalanche — **no trust in SnowScore required**. The `/verify` page does exactly this in the browser of the institution consuming the score.
 
 ---
 
