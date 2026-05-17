@@ -1826,7 +1826,7 @@ const SNOWTRACE_ADDR = 'https://testnet.snowtrace.io/address/';
 // ScoreRegistry — contrato Solidity 0.8.20+ que registra los anchors estructurados
 // (score, grade, hash, confidence) emitiendo eventos `ScoreAnchored` por usuario.
 // Address activa en mainnet/testnet se inyecta acá; deploy one-click vía deploy.html.
-const SCORE_REGISTRY_ADDRESS = '';
+const SCORE_REGISTRY_ADDRESS = '0x969Eb1C3Ee1cFE4f482264dC45E8bA268716510A';
 const SCORE_REGISTRY_ABI = [
   'function anchorScore(uint8 score, bytes2 grade, bytes32 hash, uint16 confidence) external',
   'function getLastScore(address user) external view returns (uint8, bytes2, bytes32, uint16, uint256, uint64)',
